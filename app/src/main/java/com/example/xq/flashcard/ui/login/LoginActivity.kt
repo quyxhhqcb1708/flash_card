@@ -1,12 +1,45 @@
 package com.example.xq.flashcard.ui.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.xq.flashcard.R
 import com.example.xq.flashcard.databinding.ActivityLoginBinding
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 
 class LoginActivity : AuthFormActivity<ActivityLoginBinding>() {
+
+    private val googleSignInLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                val idToken = account.idToken
+                if (idToken.isNullOrBlank()) {
+                    setGoogleLoading(binding.authForm, false)
+                    Toast.makeText(this, R.string.auth_google_missing_token, Toast.LENGTH_SHORT).show()
+                    return@registerForActivityResult
+                }
+                authManager.signInWithGoogle(
+                    idToken = idToken,
+                    onSuccess = {
+                        setGoogleLoading(binding.authForm, false)
+                        navigateToMain()
+                    },
+                    onError = { message ->
+                        setGoogleLoading(binding.authForm, false)
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                    }
+                )
+            } catch (_: ApiException) {
+                setGoogleLoading(binding.authForm, false)
+                Toast.makeText(this, R.string.auth_google_cancelled, Toast.LENGTH_SHORT).show()
+            }
+        }
 
     override fun inflateViewBinding(layoutInflater: LayoutInflater): ActivityLoginBinding {
         return ActivityLoginBinding.inflate(layoutInflater)
@@ -24,12 +57,13 @@ class LoginActivity : AuthFormActivity<ActivityLoginBinding>() {
             switchAction = getString(R.string.auth_sign_up_link),
             isLogin = true,
             primaryButtonClick = { login() },
-            switchClick = { gotoRegister() }
+            switchClick = { gotoRegister() },
+            googleClick = { signInWithGoogle() },
+            showGoogle = false
         )
         cachePrimaryLabel(formBinding)
         formBinding.tvForgotPassword.setOnClickListener {
-            Toast.makeText(this, R.string.auth_forgot_password_placeholder, Toast.LENGTH_SHORT)
-                .show()
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
 
         if (authManager.isLoggedIn()) {
@@ -58,5 +92,26 @@ class LoginActivity : AuthFormActivity<ActivityLoginBinding>() {
                 )
             }
         )
+    }
+
+    private fun signInWithGoogle() {
+        val webClientId = getWebClientId()
+        if (webClientId.isNullOrBlank()) {
+            Toast.makeText(this, R.string.auth_google_not_configured, Toast.LENGTH_LONG).show()
+            return
+        }
+        setGoogleLoading(binding.authForm, true)
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(webClientId)
+            .requestEmail()
+            .build()
+        val client = GoogleSignIn.getClient(this, gso)
+        googleSignInLauncher.launch(client.signInIntent)
+    }
+
+    private fun getWebClientId(): String? {
+        val resId = resources.getIdentifier("default_web_client_id", "string", packageName)
+        if (resId == 0) return null
+        return getString(resId).takeIf { it.isNotBlank() }
     }
 }

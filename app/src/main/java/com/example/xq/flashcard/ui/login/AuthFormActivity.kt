@@ -15,7 +15,7 @@ import com.example.xq.flashcard.ui.MainActivity
 
 abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
 
-    protected val authManager = FirebaseAuthManager()
+    protected val authManager = AuthService()
 
     protected fun setupCommonUi(
         formBinding: LayoutAuthFormBinding,
@@ -26,7 +26,9 @@ abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
         switchAction: String,
         isLogin: Boolean,
         primaryButtonClick: () -> Unit,
-        switchClick: () -> Unit
+        switchClick: () -> Unit,
+        googleClick: (() -> Unit)? = null,
+        showGoogle: Boolean = isLogin
     ) {
         formBinding.tvTitle.text = title
         formBinding.tvSubtitle.text = subtitle
@@ -35,10 +37,16 @@ abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
         formBinding.tvSwitchAction.text = switchAction
         formBinding.tvForgotPassword.isVisible = isLogin
         formBinding.tvGoogleButton.text = getString(R.string.auth_google_cta)
+        formBinding.googleContainer.isVisible = showGoogle
+        formBinding.dividerContainer.isVisible = showGoogle
         formBinding.btnPrimary.setOnClickListener { primaryButtonClick() }
         formBinding.llSwitchAccount.setOnClickListener { switchClick() }
         formBinding.googleContainer.setOnClickListener {
-            Toast.makeText(this, R.string.auth_google_placeholder, Toast.LENGTH_SHORT).show()
+            if (googleClick != null) {
+                googleClick.invoke()
+            } else {
+                Toast.makeText(this, R.string.auth_google_placeholder, Toast.LENGTH_SHORT).show()
+            }
         }
 
         attachFieldState(
@@ -57,14 +65,7 @@ abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
         )
 
         formBinding.ivTogglePassword.setOnClickListener {
-            val selection = formBinding.etPassword.selectionStart
-            val hidden = formBinding.etPassword.transformationMethod != null
-            formBinding.etPassword.transformationMethod =
-                if (hidden) null else android.text.method.PasswordTransformationMethod.getInstance()
-            formBinding.ivTogglePassword.setImageResource(
-                if (hidden) R.drawable.ic_auth_eye_off else R.drawable.ic_auth_eye
-            )
-            formBinding.etPassword.setSelection(selection.coerceAtLeast(0))
+            togglePasswordField(formBinding.etPassword, formBinding.ivTogglePassword)
         }
     }
 
@@ -143,6 +144,12 @@ abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
         }
     }
 
+    protected fun setGoogleLoading(formBinding: LayoutAuthFormBinding, isLoading: Boolean) {
+        formBinding.progressGoogle.isVisible = isLoading
+        formBinding.googleContent.alpha = if (isLoading) 0f else 1f
+        formBinding.googleContainer.isEnabled = !isLoading
+    }
+
     protected fun cachePrimaryLabel(formBinding: LayoutAuthFormBinding) {
         formBinding.btnPrimary.tag = formBinding.btnPrimary.text
     }
@@ -175,6 +182,15 @@ abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
                     getColor(if (hasFocus) R.color.auth_gradient_end else R.color.auth_icon_neutral)
                 )
         }
+    }
+
+    protected fun togglePasswordField(editText: EditText, iconView: ImageView) {
+        val selection = editText.selectionStart
+        val hidden = editText.transformationMethod != null
+        editText.transformationMethod =
+            if (hidden) null else android.text.method.PasswordTransformationMethod.getInstance()
+        iconView.setImageResource(if (hidden) R.drawable.ic_auth_eye_off else R.drawable.ic_auth_eye)
+        editText.setSelection(selection.coerceAtLeast(0))
     }
 
     private fun clearFieldError(

@@ -29,7 +29,8 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     private fun updateBaseContextLocale(context: Context): Context {
         val locale: Locale
-        val keyLang = SharePreferUtils.getLanguageCode()
+        SharePreferUtils.init(context)
+        val keyLang = SharePreferUtils.getLanguageCode(context)
         val langDev = Resources.getSystem().configuration.locale.language.toString()
         if (keyLang == "") {
             locale = Locale(langDev)

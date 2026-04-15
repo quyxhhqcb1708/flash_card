@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/auth_surface"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="32dp"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="24dp">
+
+        <View
+            android:id="@+id/topBubble"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_marginTop="-82dp"
+            android:layout_marginEnd="-88dp"
+            android:background="@drawable/bg_auth_bubble"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/bottomBubble"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_marginStart="-118dp"
+            android:layout_marginBottom="-110dp"
+            android:background="@drawable/bg_auth_bubble"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tvSettingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/main_nav_setting"
+            android:textColor="@color/auth_text_primary"
+            android:textSize="26sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/avatarFrame"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_user_avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvSettingTitle">
+
+            <ImageView
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_nav_user"
+                app:tint="@color/auth_surface" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/main_user_name_placeholder"
+            android:textColor="@color/auth_text_primary"
+            android:textSize="22sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/avatarFrame" />
+
+        <LinearLayout
+            android:id="@+id/itemUser"
+            style="@style/MainSettingItemStyle"
+            android:layout_marginTop="22dp"
+            app:layout_constraintTop_toBottomOf="@id/tvName">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_setting_user"
+                app:tint="@color/auth_gradient_end" />
+
+            <TextView
+                style="@style/MainSettingItemTextStyle"
+                android:text="@string/main_user_title" />
+
+            <ImageView
+                style="@style/MainSettingArrowStyle"
+                android:src="@drawable/ic_chevron_right" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/itemNotification"
+            style="@style/MainSettingItemStyle"
+            android:layout_marginTop="14dp"
+            app:layout_constraintTop_toBottomOf="@id/itemUser">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_setting_notification"
+                app:tint="@color/auth_gradient_end" />
+
+            <TextView
+                style="@style/MainSettingItemTextStyle"
+                android:text="@string/main_notification_schedule" />
+
+            <ImageView
+                style="@style/MainSettingArrowStyle"
+                android:src="@drawable/ic_chevron_right" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/itemSound"
+            style="@style/MainSettingItemStyle"
+            android:layout_marginTop="14dp"
+            app:layout_constraintTop_toBottomOf="@id/itemNotification">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_setting_sound"
+                app:tint="@color/auth_gradient_end" />
+
+            <TextView
+                style="@style/MainSettingItemTextStyle"
+                android:text="@string/main_sound_settings" />
+
+            <ImageView
+                style="@style/MainSettingArrowStyle"
+                android:src="@drawable/ic_chevron_right" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/itemSync"
+            style="@style/MainSettingItemStyle"
+            android:layout_marginTop="14dp"
+            app:layout_constraintTop_toBottomOf="@id/itemSound">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_setting_sync"
+                app:tint="@color/auth_gradient_end" />
+
+            <TextView
+                style="@style/MainSettingItemTextStyle"
+                android:text="@string/main_manage_sync" />
+
+            <ImageView
+                style="@style/MainSettingArrowStyle"
+                android:src="@drawable/ic_chevron_right" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

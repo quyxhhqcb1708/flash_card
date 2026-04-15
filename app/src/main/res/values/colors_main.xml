@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="main_nav_selected">#FF6A5BFF</color>
+    <color name="main_nav_unselected">#FFC3C4CA</color>
+    <color name="main_nav_shadow">#1A5262FF</color>
+    <color name="main_delete">#FFEC4C4C</color>
+</resources>

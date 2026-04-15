@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:textColor="@color/auth_text_primary"
@@ -261,10 +262,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/bg_auth_primary_button"
+            android:backgroundTint="@null"
             android:fontFamily="sans-serif-medium"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:textAllCaps="false"
             android:textColor="@color/auth_surface"
             android:textSize="18sp"
+            app:backgroundTint="@null"
             tools:text="Sign in" />
 
         <ProgressBar
@@ -339,38 +344,53 @@
             android:background="@color/auth_divider" />
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/googleContainer"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/bg_auth_google_button"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingHorizontal="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dividerContainer">
 
-        <TextView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@drawable/bg_google_icon"
-            android:fontFamily="sans-serif-black"
+        <LinearLayout
+            android:id="@+id/googleContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:text="G"
-            android:textColor="@color/auth_google_red"
-            android:textSize="22sp" />
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp">
 
-        <TextView
-            android:id="@+id/tvGoogleButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:fontFamily="sans-serif-medium"
-            android:textColor="@color/auth_google_red"
-            android:textSize="18sp"
-            tools:text="Log in with Google" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_google_icon"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="G"
+                android:textColor="@color/auth_google_red"
+                android:textSize="22sp" />
 
-</merge>
+            <TextView
+                android:id="@+id/tvGoogleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/auth_google_red"
+                android:textSize="18sp"
+                tools:text="Log in with Google" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressGoogle"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/auth_gradient_end"
+            android:visibility="gone" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

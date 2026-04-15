@@ -14,15 +14,16 @@ Build login and register screens for the Flash Card app using the provided visua
 
 - Login screen
 - Register screen
+- Forgot password screen
 - Email/password validation
 - Firebase Authentication integration for sign in and sign up
+- Firebase password reset email flow
+- Google Sign-In with Firebase Authentication
 - Loading, disabled, and error states
 - Navigation from auth screens to the main screen
 
 ## Out Of Scope
 
-- Forgot password backend flow
-- Google Sign-In backend flow
 - Profile completion
 - Persistent session routing logic beyond a basic logged-in check
 
@@ -32,7 +33,8 @@ Build login and register screens for the Flash Card app using the provided visua
 - Rounded input fields with focused and error states.
 - Primary action button uses linear gradient `#A357FF -> #3A78FF`.
 - Secondary CTA lets users switch between login and register.
-- Social login button is present visually for future extension.
+- Forgot password uses Firebase reset email flow.
+- Social login button signs in with Google when Firebase OAuth is configured.
 
 ## Technical Approach
 
@@ -44,12 +46,14 @@ Build login and register screens for the Flash Card app using the provided visua
 ## Risks
 
 - Build/runtime requires proper Firebase project setup and `google-services.json`.
-- Google Sign-In is not wired in this iteration.
+- Google Sign-In also requires SHA-1/SHA-256 and a generated `default_web_client_id`.
 
 ## Acceptance Criteria
 
 - User can register with email/password.
 - User can sign in with email/password.
+- User can request a reset password email.
+- User can sign in with Google when OAuth config is present.
 - Invalid input shows inline error state.
 - Auth request shows loading state and prevents duplicate taps.
 - Successful auth opens the main screen.

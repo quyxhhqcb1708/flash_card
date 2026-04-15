@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.FlashCard" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.FlashCard" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+
+    <style name="MainSettingItemStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:background">@drawable/bg_setting_item</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+    </style>
+
+    <style name="MainSettingItemTextStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">14dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/auth_text_primary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="MainSettingArrowStyle">
+        <item name="android:layout_width">18dp</item>
+        <item name="android:layout_height">18dp</item>
+        <item name="android:tint">@color/auth_text_hint</item>
+    </style>
 </resources>

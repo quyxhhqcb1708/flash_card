@@ -8,4 +8,5 @@
   - PRD created.
   - Login/Register UI completed from provided design.
   - Firebase email/password flow connected in code.
-  - Debug build verified successfully.
+  - Forgot password flow added with Firebase reset email.
+  - Google Sign-In flow added with config guard for missing OAuth client id.

@@ -38,14 +38,7 @@ class RegisterActivity : AuthFormActivity<ActivityRegisterBinding>() {
         )
         cachePrimaryLabel(formBinding)
         formBinding.ivToggleConfirmPassword.setOnClickListener {
-            val selection = formBinding.etConfirmPassword.selectionStart
-            val hidden = formBinding.etConfirmPassword.transformationMethod != null
-            formBinding.etConfirmPassword.transformationMethod =
-                if (hidden) null else android.text.method.PasswordTransformationMethod.getInstance()
-            formBinding.ivToggleConfirmPassword.setImageResource(
-                if (hidden) R.drawable.ic_auth_eye_off else R.drawable.ic_auth_eye
-            )
-            formBinding.etConfirmPassword.setSelection(selection.coerceAtLeast(0))
+            togglePasswordField(formBinding.etConfirmPassword, formBinding.ivToggleConfirmPassword)
         }
     }
 
