@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/auth_surface"
+    android:fillViewport="true"
+    tools:context=".ui.login.LoginActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="28dp"
+        android:paddingBottom="40dp">
+
+        <View
+            android:id="@+id/topBubble"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_marginTop="-82dp"
+            android:layout_marginEnd="-88dp"
+            android:background="@drawable/bg_auth_bubble"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/bottomBubble"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_marginStart="-118dp"
+            android:layout_marginBottom="-110dp"
+            android:background="@drawable/bg_auth_bubble"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <include
+            android:id="@+id/authForm"
+            layout="@layout/layout_auth_form"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/bottomBubble"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

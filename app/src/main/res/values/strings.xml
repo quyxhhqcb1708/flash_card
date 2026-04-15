@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Flash Card</string>
+    <string name="auth_login_title">Sign in</string>
+    <string name="auth_login_subtitle">Welcome back you\'ve\nbeen missed</string>
+    <string name="auth_register_title">Sign up</string>
+    <string name="auth_register_subtitle">Create your account to start\nlearning smarter</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_email_hint">Example123@gmail.com</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_password_hint">Enter your password</string>
+    <string name="auth_confirm_password">Confirm password</string>
+    <string name="auth_confirm_password_hint">Re-enter your password</string>
+    <string name="auth_login_action">Sign in</string>
+    <string name="auth_register_action">Create account</string>
+    <string name="auth_no_account">Don\'t have an account?</string>
+    <string name="auth_have_account">Already have an account?</string>
+    <string name="auth_sign_up_link">Sign up</string>
+    <string name="auth_sign_in_link">Sign in</string>
+    <string name="auth_or">Or</string>
+    <string name="auth_google_cta">Log in with Google</string>
+    <string name="auth_forgot_password">Forgot your password?</string>
+    <string name="auth_invalid_email">Incorrect email format</string>
+    <string name="auth_invalid_password">Password must be at least 6 characters</string>
+    <string name="auth_password_not_match">Confirm password does not match</string>
+    <string name="auth_google_placeholder">Google Sign-In sẽ nối ở bước sau</string>
+    <string name="auth_forgot_password_placeholder">Forgot password sẽ nối ở bước sau</string>
+    <string name="auth_register_success">Tạo tài khoản thành công</string>
+    <string name="auth_main_placeholder">Đăng nhập thành công. Đây là chỗ để nối vào home screen của anh.</string>
+</resources>

@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="84dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:textColor="@color/auth_text_primary"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Sign in" />
+
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:lineSpacingExtra="3dp"
+        android:textColor="@color/auth_text_primary"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="@id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        tools:text="Welcome back you've&#10;been missed" />
+
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/auth_email"
+        android:textColor="@color/auth_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@id/emailContainer"
+        app:layout_constraintStart_toStartOf="@id/emailContainer"
+        app:layout_constraintTop_toBottomOf="@id/tvSubtitle" />
+
+    <LinearLayout
+        android:id="@+id/emailContainer"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_auth_input_normal"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvEmail">
+
+        <ImageView
+            android:id="@+id/ivEmailIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_auth_mail"
+            app:tint="@color/auth_icon_neutral" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="@string/auth_email_hint"
+            android:imeOptions="actionNext"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:textColor="@color/auth_text_primary"
+            android:textColorHint="@color/auth_text_hint"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvEmailError"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/auth_error"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/emailContainer"
+        app:layout_constraintStart_toStartOf="@id/emailContainer"
+        app:layout_constraintTop_toBottomOf="@id/emailContainer"
+        tools:text="Incorrect email" />
+
+    <TextView
+        android:id="@+id/tvPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/auth_password"
+        android:textColor="@color/auth_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@id/passwordContainer"
+        app:layout_constraintStart_toStartOf="@id/passwordContainer"
+        app:layout_constraintTop_toBottomOf="@id/tvEmailError" />
+
+    <LinearLayout
+        android:id="@+id/passwordContainer"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_auth_input_normal"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPassword">
+
+        <ImageView
+            android:id="@+id/ivPasswordIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_auth_key"
+            app:tint="@color/auth_icon_neutral" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="@string/auth_password_hint"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:textColor="@color/auth_text_primary"
+            android:textColorHint="@color/auth_text_hint"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/ivTogglePassword"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_auth_eye_off"
+            app:tint="@color/auth_text_hint" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvPasswordError"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/auth_error"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/passwordContainer"
+        app:layout_constraintStart_toStartOf="@id/passwordContainer"
+        app:layout_constraintTop_toBottomOf="@id/passwordContainer"
+        tools:text="Password too short" />
+
+    <TextView
+        android:id="@+id/tvConfirmPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/auth_confirm_password"
+        android:textColor="@color/auth_text_secondary"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/confirmPasswordContainer"
+        app:layout_constraintStart_toStartOf="@id/confirmPasswordContainer"
+        app:layout_constraintTop_toBottomOf="@id/tvPasswordError" />
+
+    <LinearLayout
+        android:id="@+id/confirmPasswordContainer"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_auth_input_normal"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="18dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvConfirmPassword">
+
+        <ImageView
+            android:id="@+id/ivConfirmPasswordIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_auth_key"
+            app:tint="@color/auth_icon_neutral" />
+
+        <EditText
+            android:id="@+id/etConfirmPassword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="@string/auth_confirm_password_hint"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:textColor="@color/auth_text_primary"
+            android:textColorHint="@color/auth_text_hint"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/ivToggleConfirmPassword"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_auth_eye_off"
+            android:visibility="gone"
+            app:tint="@color/auth_text_hint" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvConfirmPasswordError"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/auth_error"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/confirmPasswordContainer"
+        app:layout_constraintStart_toStartOf="@id/confirmPasswordContainer"
+        app:layout_constraintTop_toBottomOf="@id/confirmPasswordContainer"
+        tools:text="Password does not match" />
+
+    <TextView
+        android:id="@+id/tvForgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/auth_forgot_password"
+        android:textColor="@color/auth_text_secondary"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/passwordContainer"
+        app:layout_constraintTop_toBottomOf="@id/tvConfirmPasswordError" />
+
+    <FrameLayout
+        android:id="@+id/primaryButtonContainer"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="22dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvForgotPassword">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_auth_primary_button"
+            android:fontFamily="sans-serif-medium"
+            android:textAllCaps="false"
+            android:textColor="@color/auth_surface"
+            android:textSize="18sp"
+            tools:text="Sign in" />
+
+        <ProgressBar
+            android:id="@+id/progressPrimary"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/auth_surface"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/llSwitchAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/primaryButtonContainer">
+
+        <TextView
+            android:id="@+id/tvSwitchPrefix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/auth_text_primary"
+            android:textSize="16sp"
+            tools:text="Don't have an account?" />
+
+        <TextView
+            android:id="@+id/tvSwitchAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/auth_gradient_start"
+            android:textSize="16sp"
+            tools:text="Sign up" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dividerContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llSwitchAccount">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/auth_divider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:text="@string/auth_or"
+            android:textColor="@color/auth_text_primary"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/auth_divider" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/googleContainer"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_auth_google_button"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dividerContainer">
+
+        <TextView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_google_icon"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center"
+            android:text="G"
+            android:textColor="@color/auth_google_red"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/tvGoogleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/auth_google_red"
+            android:textSize="18sp"
+            tools:text="Log in with Google" />
+    </LinearLayout>
+
+</merge>

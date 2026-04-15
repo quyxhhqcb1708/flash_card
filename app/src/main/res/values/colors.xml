@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="auth_surface">#FFFFFFFF</color>
+    <color name="auth_text_primary">#FF2A2A33</color>
+    <color name="auth_text_secondary">#FF5B5B64</color>
+    <color name="auth_text_hint">#FFC2C4CC</color>
+    <color name="auth_stroke">#FFD8D9E0</color>
+    <color name="auth_gradient_start">#FFA357FF</color>
+    <color name="auth_gradient_end">#FF3A78FF</color>
+    <color name="auth_disabled">#FFE5E5E7</color>
+    <color name="auth_error">#FFFF4E4E</color>
+    <color name="auth_divider">#FFD9D9DE</color>
+    <color name="auth_icon_neutral">#FFB8BBC4</color>
+    <color name="auth_bubble_fill">#0FF0F9FF</color>
+    <color name="auth_bubble_stroke">#1206B6FF</color>
+    <color name="auth_google_red">#FFB02822</color>
+</resources>
