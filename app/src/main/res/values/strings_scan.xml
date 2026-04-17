@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_camera_title">SCAN TEXT</string>
+    <string name="scan_translate_title">Translate</string>
+    <string name="scan_language_english">English</string>
+    <string name="scan_language_vietnamese">Vietnamese</string>
+    <string name="scan_live_hint">Dua camera vao noi dung de scan realtime.</string>
+    <string name="scan_live_detected_hint">Da nhan %1$d cum tu. Bam chup de review va dich.</string>
+    <string name="scan_review_hint">Cham vao cum tu duoc boi xanh de dich nhanh, hoac bam Translate All.</string>
+    <string name="scan_capture">Tap to capture</string>
+    <string name="scan_translate_all">Translate All</string>
+    <string name="scan_scan_again">Scan Again</string>
+    <string name="scan_go_to_translate">Go To Translate</string>
+    <string name="scan_pick_image">Pick Image</string>
+    <string name="scan_camera_permission_denied">Anh cho phep camera de scan realtime. Van co the chon anh tu thu vien.</string>
+    <string name="scan_camera_unavailable">Khong mo duoc camera luc nay.</string>
+    <string name="scan_capture_failed">Em chua lay duoc khung hinh camera, Anh thu lai giup em.</string>
+    <string name="scan_no_text_found">Em chua doc duoc text tu khung hinh nay.</string>
+    <string name="scan_translation_loading">Dang dich...</string>
+    <string name="scan_translation_error">Dich that bai. Anh thu lai giup em.</string>
+    <string name="scan_gallery_desc">Open gallery image</string>
+    <string name="scan_source_hint">Enter text or pick an image to translate</string>
+    <string name="scan_result_hint">Translation result will appear here</string>
+    <string name="scan_flashcard">Flash Card</string>
+    <string name="scan_flashcard_coming_soon">Flash card flow em de san, minh noi tiep sau.</string>
+    <string name="scan_clear_text">Clear text</string>
+    <string name="scan_copy_result">Copy result</string>
+    <string name="scan_pick_image_short">Image</string>
+    <string name="scan_selected_text_title">Selected phrase</string>
+    <string name="scan_selected_translation_title">Translation</string>
+    <string name="scan_copy_done">Da copy ban dich.</string>
+    <string name="scan_model_downloading">Dang tai model dich lan dau...</string>
+    <string name="scan_input_empty">Anh nhap text hoac chon anh de em dich.</string>
+    <string name="scan_gallery_empty">Anh chon anh co text ro hon giup em nhe.</string>
+</resources>

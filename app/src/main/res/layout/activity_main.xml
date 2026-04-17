@@ -32,100 +32,143 @@
             <View
                 android:id="@+id/navBackground"
                 android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="66dp"
+                android:layout_marginTop="22dp"
                 android:background="@drawable/bg_main_bottom_nav"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <LinearLayout
-                android:id="@+id/navLibrary"
-                android:layout_width="72dp"
+                android:id="@+id/leftNavGroup"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
+                android:layout_marginEnd="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="@id/navBackground"
                 app:layout_constraintEnd_toStartOf="@id/homeButtonWrapper"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@id/navBackground"
                 app:layout_constraintTop_toTopOf="@id/navBackground">
 
-                <ImageView
-                    android:id="@+id/ivLibrary"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_nav_library"
-                    app:tint="@color/main_nav_unselected" />
-
-                <TextView
-                    android:id="@+id/tvLibrary"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/navCard"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/main_nav_library"
-                    android:textColor="@color/main_nav_unselected"
-                    android:textSize="12sp" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivCard"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_nav_card"
+                        app:tint="@color/main_nav_unselected" />
+
+                    <TextView
+                        android:id="@+id/tvCard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/main_nav_card"
+                        android:textColor="@color/main_nav_unselected"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/navLibrary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivLibrary"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_nav_library"
+                        app:tint="@color/main_nav_unselected" />
+
+                    <TextView
+                        android:id="@+id/tvLibrary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/main_nav_library"
+                        android:textColor="@color/main_nav_unselected"
+                        android:textSize="12sp" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/navUser"
-                android:layout_width="72dp"
+                android:id="@+id/rightNavGroup"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
+                android:layout_marginStart="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="@id/navBackground"
+                app:layout_constraintEnd_toEndOf="@id/navBackground"
                 app:layout_constraintStart_toEndOf="@id/homeButtonWrapper"
                 app:layout_constraintTop_toTopOf="@id/navBackground">
 
-                <ImageView
-                    android:id="@+id/ivUser"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_nav_user"
-                    app:tint="@color/main_nav_unselected" />
-
-                <TextView
-                    android:id="@+id/tvUser"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/navUser"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/main_nav_user"
-                    android:textColor="@color/main_nav_unselected"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/navSetting"
-                android:layout_width="72dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@id/navBackground"
-                app:layout_constraintEnd_toEndOf="@id/navBackground"
-                app:layout_constraintTop_toTopOf="@id/navBackground">
+                    <ImageView
+                        android:id="@+id/ivUser"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_nav_user"
+                        app:tint="@color/main_nav_unselected" />
 
-                <ImageView
-                    android:id="@+id/ivSetting"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_nav_setting"
-                    app:tint="@color/main_nav_unselected" />
+                    <TextView
+                        android:id="@+id/tvUser"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/main_nav_user"
+                        android:textColor="@color/main_nav_unselected"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvSetting"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/navSetting"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/main_nav_setting"
-                    android:textColor="@color/main_nav_unselected"
-                    android:textSize="12sp" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivSetting"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_nav_setting"
+                        app:tint="@color/main_nav_unselected" />
+
+                    <TextView
+                        android:id="@+id/tvSetting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/main_nav_setting"
+                        android:textColor="@color/main_nav_unselected"
+                        android:textSize="12sp" />
+                </LinearLayout>
             </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/homeButtonWrapper"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="62dp"
+                android:layout_height="62dp"
                 android:background="@drawable/bg_main_home_button"
                 android:elevation="8dp"
                 app:layout_constraintBottom_toBottomOf="@id/navBackground"

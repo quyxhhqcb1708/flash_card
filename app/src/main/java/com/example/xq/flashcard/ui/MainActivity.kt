@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity(), MainNavigationHost {
         setContentView(binding.root)
         setupViewPager()
         setupBottomNavigation()
-        openHome()
+        openScanText()
     }
 
     private fun setupViewPager() {
@@ -33,14 +33,15 @@ class MainActivity : AppCompatActivity(), MainNavigationHost {
     }
 
     private fun setupBottomNavigation() {
-        binding.navHome.setOnClickListener { openHome() }
-        binding.homeButtonWrapper.setOnClickListener { openHome() }
+        binding.navHome.setOnClickListener { openScanText() }
+        binding.homeButtonWrapper.setOnClickListener { openScanText() }
+        binding.navCard.setOnClickListener { openCard() }
         binding.navLibrary.setOnClickListener { openLibrary() }
         binding.navUser.setOnClickListener { openUser() }
         binding.navSetting.setOnClickListener { openSetting() }
     }
 
-    override fun openHome() {
+    override fun openCard() {
         binding.viewPager.currentItem = 0
     }
 
@@ -48,27 +49,34 @@ class MainActivity : AppCompatActivity(), MainNavigationHost {
         binding.viewPager.currentItem = 1
     }
 
-    override fun openUser() {
+    override fun openScanText() {
         binding.viewPager.currentItem = 2
     }
 
-    override fun openSetting() {
+    override fun openUser() {
         binding.viewPager.currentItem = 3
+    }
+
+    override fun openSetting() {
+        binding.viewPager.currentItem = 4
     }
 
     private fun updateBottomBar(position: Int) {
         val selectedColor = getColor(R.color.main_nav_selected)
         val normalColor = getColor(R.color.main_nav_unselected)
 
+        binding.ivCard.setColorFilter(if (position == 0) selectedColor else normalColor)
+        binding.tvCard.setTextColor(if (position == 0) selectedColor else normalColor)
+
         binding.ivLibrary.setColorFilter(if (position == 1) selectedColor else normalColor)
         binding.tvLibrary.setTextColor(if (position == 1) selectedColor else normalColor)
 
-        binding.ivUser.setColorFilter(if (position == 2) selectedColor else normalColor)
-        binding.tvUser.setTextColor(if (position == 2) selectedColor else normalColor)
+        binding.ivUser.setColorFilter(if (position == 3) selectedColor else normalColor)
+        binding.tvUser.setTextColor(if (position == 3) selectedColor else normalColor)
 
-        binding.ivSetting.setColorFilter(if (position == 3) selectedColor else normalColor)
-        binding.tvSetting.setTextColor(if (position == 3) selectedColor else normalColor)
+        binding.ivSetting.setColorFilter(if (position == 4) selectedColor else normalColor)
+        binding.tvSetting.setTextColor(if (position == 4) selectedColor else normalColor)
 
-        binding.homeButtonWrapper.alpha = if (position == 0) 1f else 0.75f
+        binding.homeButtonWrapper.alpha = if (position == 2) 1f else 0.75f
     }
 }

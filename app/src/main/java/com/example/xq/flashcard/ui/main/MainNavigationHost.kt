@@ -1,8 +1,9 @@
 package com.example.xq.flashcard.ui.main
 
 interface MainNavigationHost {
-    fun openHome()
+    fun openCard()
     fun openLibrary()
+    fun openScanText()
     fun openUser()
     fun openSetting()
 }

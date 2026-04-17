@@ -1,77 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/auth_surface"
-    android:fillViewport="true">
+    android:paddingTop="32dp"
+    android:paddingHorizontal="16dp"
+    android:paddingBottom="24dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <View
+        android:id="@+id/topBubble"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginTop="-82dp"
+        android:layout_marginEnd="-88dp"
+        android:background="@drawable/bg_auth_bubble"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/bottomBubble"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_marginStart="-118dp"
+        android:layout_marginBottom="-110dp"
+        android:background="@drawable/bg_auth_bubble"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="32dp"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="24dp">
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/main_home_title"
+        android:textColor="@color/auth_text_primary"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:id="@+id/topBubble"
-            android:layout_width="220dp"
-            android:layout_height="220dp"
-            android:layout_marginTop="-82dp"
-            android:layout_marginEnd="-88dp"
-            android:background="@drawable/bg_auth_bubble"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/ivBell"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_home_bell"
+        app:layout_constraintBottom_toBottomOf="@id/tvTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitle" />
 
-        <View
-            android:id="@+id/bottomBubble"
-            android:layout_width="240dp"
-            android:layout_height="240dp"
-            android:layout_marginStart="-118dp"
-            android:layout_marginBottom="-110dp"
-            android:background="@drawable/bg_auth_bubble"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/contentGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.78" />
 
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/main_home_title"
-            android:textColor="@color/auth_text_primary"
-            android:textSize="26sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/ivBell"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_home_bell"
-            app:layout_constraintBottom_toBottomOf="@id/tvTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvTitle" />
+    <LinearLayout
+        android:id="@+id/cardsContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/contentGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardScanText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="18dp"
             app:cardBackgroundColor="@color/auth_surface"
-            app:cardCornerRadius="18dp"
+            app:cardCornerRadius="22dp"
             app:cardElevation="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTitle"
             app:strokeColor="@color/auth_gradient_end"
             app:strokeWidth="1.5dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="14dp">
+                android:layout_height="match_parent"
+                android:minHeight="170dp"
+                android:padding="18dp">
 
                 <TextView
                     android:id="@+id/tvScanCardTitle"
@@ -80,7 +92,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/main_home_scan_title"
                     android:textColor="@color/auth_text_primary"
-                    android:textSize="16sp"
+                    android:textSize="24sp"
                     app:layout_constraintEnd_toStartOf="@id/scanIllustration"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -89,20 +101,22 @@
                     android:id="@+id/tvScanCardDesc"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/main_home_scan_desc"
                     android:textColor="@color/auth_text_primary"
-                    android:textSize="14sp"
+                    android:textSize="20sp"
                     app:layout_constraintEnd_toStartOf="@id/scanIllustration"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvScanCardTitle" />
 
                 <ImageView
                     android:id="@+id/scanIllustration"
-                    android:layout_width="104dp"
-                    android:layout_height="82dp"
+                    android:layout_width="140dp"
+                    android:layout_height="0dp"
+                    android:adjustViewBounds="true"
                     android:src="@drawable/ic_home_scan_card"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="140:110"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -110,29 +124,29 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardTranslate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             app:cardBackgroundColor="@color/auth_surface"
-            app:cardCornerRadius="18dp"
+            app:cardCornerRadius="22dp"
             app:cardElevation="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardScanText"
             app:strokeColor="@color/auth_gradient_end"
             app:strokeWidth="1.5dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="14dp">
+                android:layout_height="match_parent"
+                android:minHeight="170dp"
+                android:padding="18dp">
 
                 <ImageView
                     android:id="@+id/translateIllustration"
-                    android:layout_width="104dp"
-                    android:layout_height="82dp"
+                    android:layout_width="140dp"
+                    android:layout_height="0dp"
+                    android:adjustViewBounds="true"
                     android:src="@drawable/ic_home_translate_card"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="140:110"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -143,7 +157,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/main_home_translate_title"
                     android:textColor="@color/auth_text_primary"
-                    android:textSize="16sp"
+                    android:textSize="24sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/translateIllustration"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -152,15 +166,15 @@
                     android:id="@+id/tvTranslateDesc"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/main_home_translate_desc"
                     android:textColor="@color/auth_text_primary"
-                    android:textSize="14sp"
+                    android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tvTranslateTitle"
                     app:layout_constraintTop_toBottomOf="@id/tvTranslateTitle" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

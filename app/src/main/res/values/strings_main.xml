@@ -4,9 +4,12 @@
     <string name="main_home_scan_desc">Scan text to instantly translate content .</string>
     <string name="main_home_translate_title">Translate</string>
     <string name="main_home_translate_desc">Translate text quickly and clearly.</string>
+    <string name="main_nav_card">Card</string>
     <string name="main_nav_library">Library</string>
     <string name="main_nav_user">User</string>
     <string name="main_nav_setting">Setting</string>
+    <string name="main_card_title">Card</string>
+    <string name="main_card_placeholder">This screen is ready for your flashcard content.</string>
     <string name="main_library_placeholder">Day la cho de anh noi thu vien flashcard va lich su scan sau.</string>
     <string name="main_user_title">User</string>
     <string name="main_user_name">Name User</string>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="scan_overlay_fill">#334281FF</color>
+    <color name="scan_overlay_stroke">#FF3A78FF</color>
+    <color name="scan_chip_unselected_bg">#FFF4F5FF</color>
+    <color name="scan_camera_scrim">#66000000</color>
+    <color name="scan_capture_outer">#D9FFFFFF</color>
+</resources>
