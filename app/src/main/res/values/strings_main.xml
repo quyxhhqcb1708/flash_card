@@ -1,7 +1,7 @@
 <resources>
     <string name="main_home_title">Scan Text</string>
     <string name="main_home_scan_title">Scan Text</string>
-    <string name="main_home_scan_desc">Scan text to instantly translate content .</string>
+    <string name="main_home_scan_desc">Scan text to instantly translate content.</string>
     <string name="main_home_translate_title">Translate</string>
     <string name="main_home_translate_desc">Translate text quickly and clearly.</string>
     <string name="main_nav_card">Card</string>
@@ -9,15 +9,18 @@
     <string name="main_nav_user">User</string>
     <string name="main_nav_setting">Setting</string>
     <string name="main_card_title">Card</string>
-    <string name="main_card_placeholder">This screen is ready for your flashcard content.</string>
-    <string name="main_library_placeholder">Day la cho de anh noi thu vien flashcard va lich su scan sau.</string>
+    <string name="main_card_placeholder">No flashcards saved yet. Save one from Scan Text or Translate and it will appear here.</string>
+    <string name="main_card_language_pair">%1$s -> %2$s</string>
+    <string name="main_card_saved_at">Saved %1$s</string>
+    <string name="main_card_saved_in">Library: %1$s</string>
+    <string name="main_library_placeholder">Your flashcard collections will appear here.</string>
     <string name="main_user_title">User</string>
-    <string name="main_user_name">Name User</string>
-    <string name="main_user_name_placeholder">Name User</string>
+    <string name="main_user_name">Name</string>
+    <string name="main_user_name_placeholder">Name</string>
     <string name="main_logout">Log Out</string>
     <string name="main_delete_account">Delete Account</string>
     <string name="main_notification_schedule">Notification Schedule</string>
     <string name="main_sound_settings">Sound Settings</string>
     <string name="main_manage_sync">Manage Data Sync</string>
-    <string name="main_coming_soon">Tinh nang nay em de san cho minh noi tiep.</string>
+    <string name="main_coming_soon">This feature is ready for the next step.</string>
 </resources>

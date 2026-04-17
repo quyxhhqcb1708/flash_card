@@ -1,15 +1,16 @@
 package com.example.xq.flashcard.ui.scan
 
 import android.Manifest
-import android.content.Intent
+import android.app.Activity
 import android.graphics.Bitmap
+import android.graphics.RectF
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -18,8 +19,9 @@ import androidx.core.view.isVisible
 import com.example.xq.flashcard.R
 import com.example.xq.flashcard.base.BaseActivity
 import com.example.xq.flashcard.databinding.ActivityScanCameraBinding
+import com.example.xq.flashcard.ui.library.CreateCollectionActivity
+import com.example.xq.flashcard.ui.library.SaveToFlashcardActivity
 import com.example.xq.flashcard.ui.translate.AppTranslationLanguage
-import com.example.xq.flashcard.ui.translate.TranslateActivity
 import com.example.xq.flashcard.ui.translate.TranslationManager
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -35,6 +37,9 @@ class ScanCameraActivity : BaseActivity<ActivityScanCameraBinding>() {
     private var isAnalyzingFrame = false
     private var isReviewMode = false
     private var isCapturingPhoto = false
+    private var isTranslatedOverlayVisible = false
+    private var translateOverlaySessionId = 0
+    private var currentReviewBitmap: Bitmap? = null
     private var currentFullText = ""
     private var currentBlocks: List<OcrTextBlock> = emptyList()
     private var selectedSourceText = ""
@@ -64,6 +69,16 @@ class ScanCameraActivity : BaseActivity<ActivityScanCameraBinding>() {
         enterReviewMode(bitmap)
     }
 
+    private val saveFlashcardLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.getStringExtra(CreateCollectionActivity.EXTRA_RESULT_MESSAGE)?.let {
+                    Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                }
+                clearCurrentSelection()
+            }
+        }
+
     override fun inflateViewBinding(layoutInflater: android.view.LayoutInflater): ActivityScanCameraBinding {
         return ActivityScanCameraBinding.inflate(layoutInflater)
     }
@@ -91,29 +106,29 @@ class ScanCameraActivity : BaseActivity<ActivityScanCameraBinding>() {
             sourceLanguage = targetLanguage
             targetLanguage = previousSource
             updateLanguageUi()
-            if (selectedSourceText.isNotBlank()) {
-                translateSelectedPhrase(selectedSourceText)
+
+            when {
+                isTranslatedOverlayVisible && currentBlocks.isNotEmpty() -> translateAllOnImage()
+                selectedSourceText.isNotBlank() -> translateSelectedPhrase(selectedSourceText)
             }
         }
         binding.btnCapture.setOnClickListener { captureCurrentFrame() }
         binding.btnScanAgain.setOnClickListener { exitReviewMode() }
         binding.btnTranslateAll.setOnClickListener {
-            if (currentFullText.isBlank()) {
-                Toast.makeText(this, R.string.scan_no_text_found, Toast.LENGTH_SHORT).show()
+            if (isTranslatedOverlayVisible) {
+                showOriginalDetectedText()
             } else {
-                openTranslateScreen(currentFullText)
+                translateAllOnImage()
             }
         }
-        binding.btnGoToTranslate.setOnClickListener {
-            if (selectedSourceText.isBlank()) {
-                Toast.makeText(this, R.string.scan_no_text_found, Toast.LENGTH_SHORT).show()
-            } else {
-                openTranslateScreen(selectedSourceText, selectedTranslatedText)
-            }
-        }
-        binding.ocrOverlay.onBlockTapped = { block ->
-            if (isReviewMode) {
-                translateSelectedPhrase(block.text)
+        binding.btnSaveSelection.setOnClickListener { saveSelectedPhrase() }
+        binding.ocrOverlay.onSelectionChanged = { selectedItems ->
+            if (isReviewMode && !isTranslatedOverlayVisible) {
+                if (selectedItems.isEmpty()) {
+                    clearCurrentSelection()
+                } else {
+                    translateSelectedPhrase(selectedItems.joinToString(" ") { it.text })
+                }
             }
         }
     }
@@ -179,6 +194,7 @@ class ScanCameraActivity : BaseActivity<ActivityScanCameraBinding>() {
                                     } else {
                                         getString(R.string.scan_live_hint)
                                     }
+                                    binding.ocrOverlay.clearTranslatedBlocks()
                                     binding.ocrOverlay.setBlocks(
                                         payload.blocks,
                                         payload.imageWidth,
@@ -265,14 +281,22 @@ class ScanCameraActivity : BaseActivity<ActivityScanCameraBinding>() {
 
     private fun enterReviewMode(bitmap: Bitmap) {
         isReviewMode = true
+        isTranslatedOverlayVisible = false
+        translateOverlaySessionId += 1
+        currentReviewBitmap = bitmap
+        currentFullText = ""
+        currentBlocks = emptyList()
         binding.ivCapturedPreview.setImageBitmap(bitmap)
         binding.ivCapturedPreview.isVisible = true
         binding.captureActions.isVisible = false
         binding.reviewActions.isVisible = true
         binding.cardSelection.isVisible = false
         binding.tvHint.text = getString(R.string.scan_review_hint)
+        binding.btnTranslateAll.text = getString(R.string.scan_translate_all)
+        binding.btnTranslateAll.isEnabled = false
         binding.progressProcessing.isVisible = true
         binding.ocrOverlay.clearBlocks()
+        binding.ocrOverlay.clearTranslatedBlocks()
         binding.ocrOverlay.setInteractionEnabled(false)
         recognitionCoordinator.processBitmap(
             bitmap = bitmap,
@@ -286,12 +310,8 @@ class ScanCameraActivity : BaseActivity<ActivityScanCameraBinding>() {
                         payload.imageWidth,
                         payload.imageHeight
                     )
+                    binding.btnTranslateAll.isEnabled = payload.blocks.isNotEmpty()
                     binding.ocrOverlay.setInteractionEnabled(payload.blocks.isNotEmpty())
-                    if (payload.blocks.isNotEmpty()) {
-                        val firstBlock = payload.blocks.first()
-                        binding.ocrOverlay.selectBlock(firstBlock.text)
-                        translateSelectedPhrase(firstBlock.text)
-                    }
                     if (payload.fullText.isBlank()) {
                         Toast.makeText(this, R.string.scan_no_text_found, Toast.LENGTH_SHORT).show()
                     }
@@ -300,6 +320,7 @@ class ScanCameraActivity : BaseActivity<ActivityScanCameraBinding>() {
             onError = {
                 runOnUiThread {
                     binding.progressProcessing.isVisible = false
+                    binding.btnTranslateAll.isEnabled = false
                     Toast.makeText(this, R.string.scan_no_text_found, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -308,24 +329,28 @@ class ScanCameraActivity : BaseActivity<ActivityScanCameraBinding>() {
 
     private fun exitReviewMode() {
         isReviewMode = false
-        selectedSourceText = ""
-        selectedTranslatedText = ""
+        isTranslatedOverlayVisible = false
+        translateOverlaySessionId += 1
+        currentReviewBitmap = null
+        currentFullText = ""
+        currentBlocks = emptyList()
         binding.ivCapturedPreview.isVisible = false
         binding.captureActions.isVisible = true
         binding.reviewActions.isVisible = false
-        binding.cardSelection.isVisible = false
         binding.tvHint.text = getString(R.string.scan_live_hint)
         binding.progressProcessing.isVisible = false
         binding.ocrOverlay.clearBlocks()
+        binding.ocrOverlay.clearTranslatedBlocks()
         binding.ocrOverlay.setInteractionEnabled(false)
+        clearCurrentSelection()
     }
 
     private fun translateSelectedPhrase(text: String) {
         selectedSourceText = text
-        binding.ocrOverlay.selectBlock(text)
         binding.cardSelection.isVisible = true
         binding.tvSelectedSource.text = text
         binding.tvSelectedTranslation.text = getString(R.string.scan_translation_loading)
+        binding.btnSaveSelection.isEnabled = false
         translationManager.translateText(
             text = text,
             sourceLanguage = sourceLanguage,
@@ -333,24 +358,157 @@ class ScanCameraActivity : BaseActivity<ActivityScanCameraBinding>() {
             onSuccess = { translated ->
                 selectedTranslatedText = translated
                 binding.tvSelectedTranslation.text = translated.ifBlank { text }
+                binding.btnSaveSelection.isEnabled = true
             },
             onError = {
                 selectedTranslatedText = ""
                 binding.tvSelectedTranslation.text = getString(R.string.scan_translation_error)
+                binding.btnSaveSelection.isEnabled = true
             }
         )
     }
 
-    private fun openTranslateScreen(sourceText: String, translatedText: String? = null) {
-        val intent = Intent(this, TranslateActivity::class.java).apply {
-            putExtra(TranslateActivity.EXTRA_SOURCE_TEXT, sourceText)
-            putExtra(TranslateActivity.EXTRA_SOURCE_LANGUAGE, sourceLanguage.mlKitCode)
-            putExtra(TranslateActivity.EXTRA_TARGET_LANGUAGE, targetLanguage.mlKitCode)
-            if (!translatedText.isNullOrBlank()) {
-                putExtra(TranslateActivity.EXTRA_RESULT_TEXT, translatedText)
-            }
+    private fun clearCurrentSelection() {
+        selectedSourceText = ""
+        selectedTranslatedText = ""
+        binding.cardSelection.isVisible = false
+        binding.btnSaveSelection.isEnabled = false
+        binding.ocrOverlay.selectBlocks(emptyList())
+    }
+
+    private fun saveSelectedPhrase() {
+        if (selectedSourceText.isBlank()) {
+            Toast.makeText(this, R.string.scan_no_text_found, Toast.LENGTH_SHORT).show()
+            return
         }
-        startActivity(intent)
+
+        val translatedText = selectedTranslatedText
+            .ifBlank { binding.tvSelectedTranslation.text?.toString().orEmpty() }
+            .takeUnless {
+                it == getString(R.string.scan_translation_loading) ||
+                    it == getString(R.string.scan_translation_error)
+            }
+            .orEmpty()
+        saveFlashcardLauncher.launch(
+            SaveToFlashcardActivity.createIntent(
+                context = this,
+                term = selectedSourceText,
+                definition = translatedText.ifBlank { selectedSourceText },
+                sourceLanguageCode = sourceLanguage.mlKitCode,
+                targetLanguageCode = targetLanguage.mlKitCode
+            )
+        )
+    }
+
+    private fun translateAllOnImage() {
+        val groupedBlocks = OcrTextGrouping.buildTranslatedGroups(currentBlocks)
+        if (groupedBlocks.isEmpty()) {
+            Toast.makeText(this, R.string.scan_no_text_found, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val sessionId = ++translateOverlaySessionId
+        isTranslatedOverlayVisible = false
+        clearCurrentSelection()
+        binding.progressProcessing.isVisible = true
+        binding.btnTranslateAll.isEnabled = false
+        binding.btnTranslateAll.text = getString(R.string.scan_translating_all)
+        binding.tvHint.text = getString(R.string.scan_translation_overlay_processing_hint)
+        binding.ocrOverlay.clearTranslatedBlocks()
+        binding.ocrOverlay.setInteractionEnabled(false)
+        translateGroupsSequentially(
+            groups = groupedBlocks,
+            index = 0,
+            translated = mutableListOf(),
+            sessionId = sessionId,
+            cache = mutableMapOf()
+        )
+    }
+
+    private fun translateGroupsSequentially(
+        groups: List<OcrTextBlock>,
+        index: Int,
+        translated: MutableList<TranslatedOcrBlock>,
+        sessionId: Int,
+        cache: MutableMap<String, String>
+    ) {
+        if (sessionId != translateOverlaySessionId || isDestroyed || isFinishing) {
+            return
+        }
+        if (index >= groups.size) {
+            showTranslatedOverlay(translated)
+            return
+        }
+
+        val group = groups[index]
+        cache[group.text]?.let { cachedTranslation ->
+            val overlayColors = ImageOverlayColorResolver.resolve(currentReviewBitmap, group.bounds)
+            translated += TranslatedOcrBlock(
+                sourceText = group.text,
+                translatedText = cachedTranslation,
+                bounds = RectF(group.bounds),
+                backgroundColor = overlayColors.backgroundColor,
+                textColor = overlayColors.textColor
+            )
+            translateGroupsSequentially(groups, index + 1, translated, sessionId, cache)
+            return
+        }
+
+        translationManager.translateText(
+            text = group.text,
+            sourceLanguage = sourceLanguage,
+            targetLanguage = targetLanguage,
+            onSuccess = { result ->
+                if (sessionId != translateOverlaySessionId || isDestroyed || isFinishing) return@translateText
+                val translatedText = result.ifBlank { group.text }
+                cache[group.text] = translatedText
+                val overlayColors = ImageOverlayColorResolver.resolve(currentReviewBitmap, group.bounds)
+                translated += TranslatedOcrBlock(
+                    sourceText = group.text,
+                    translatedText = translatedText,
+                    bounds = RectF(group.bounds),
+                    backgroundColor = overlayColors.backgroundColor,
+                    textColor = overlayColors.textColor
+                )
+                translateGroupsSequentially(groups, index + 1, translated, sessionId, cache)
+            },
+            onError = {
+                if (sessionId != translateOverlaySessionId || isDestroyed || isFinishing) return@translateText
+                cache[group.text] = group.text
+                val overlayColors = ImageOverlayColorResolver.resolve(currentReviewBitmap, group.bounds)
+                translated += TranslatedOcrBlock(
+                    sourceText = group.text,
+                    translatedText = group.text,
+                    bounds = RectF(group.bounds),
+                    backgroundColor = overlayColors.backgroundColor,
+                    textColor = overlayColors.textColor
+                )
+                translateGroupsSequentially(groups, index + 1, translated, sessionId, cache)
+            }
+        )
+    }
+
+    private fun showTranslatedOverlay(items: List<TranslatedOcrBlock>) {
+        binding.progressProcessing.isVisible = false
+        binding.btnTranslateAll.isEnabled = true
+        if (items.isEmpty()) {
+            Toast.makeText(this, R.string.scan_translation_error, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        isTranslatedOverlayVisible = true
+        binding.ocrOverlay.showTranslatedBlocks(items)
+        binding.tvHint.text = getString(R.string.scan_translation_overlay_hint)
+        binding.btnTranslateAll.text = getString(R.string.scan_show_original)
+    }
+
+    private fun showOriginalDetectedText() {
+        isTranslatedOverlayVisible = false
+        binding.ocrOverlay.clearTranslatedBlocks()
+        binding.ocrOverlay.setInteractionEnabled(currentBlocks.isNotEmpty())
+        binding.tvHint.text = getString(R.string.scan_review_hint)
+        binding.btnTranslateAll.text = getString(R.string.scan_translate_all)
+        binding.btnTranslateAll.isEnabled = currentBlocks.isNotEmpty()
     }
 
     private fun updateLanguageUi() {

@@ -7,6 +7,14 @@ data class OcrTextBlock(
     val bounds: RectF
 )
 
+data class TranslatedOcrBlock(
+    val sourceText: String,
+    val translatedText: String,
+    val bounds: RectF,
+    val backgroundColor: Int,
+    val textColor: Int
+)
+
 data class RecognizedTextPayload(
     val fullText: String,
     val blocks: List<OcrTextBlock>,

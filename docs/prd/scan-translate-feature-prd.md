@@ -18,14 +18,14 @@ Build the Scan Text and Translate flow for the Flash Card app with realtime OCR 
 - Capture current frame from preview for post-scan review.
 - Gallery picker on the scan screen.
 - Phrase-level translation by tapping OCR-highlighted text after capture.
-- Translate All action that sends OCR text to the translate screen.
+- Translate All action that renders translated text directly on top of the captured image.
 - Translate screen with source text, target text, language swap, image picker, and auto translation.
+- Save flashcard entry points from scan and translate into the shared Library flow.
 - English to Vietnamese and Vietnamese to English translation using ML Kit.
 
 ## Out Of Scope
 
 - Persisting scan history
-- Flash card creation persistence
 - Offline download management UI for ML Kit models
 - Multi-language selection beyond English and Vietnamese
 
@@ -34,13 +34,14 @@ Build the Scan Text and Translate flow for the Flash Card app with realtime OCR 
 - Keep the existing white/gradient visual language used by auth and main screens.
 - Scan Text screen is fullscreen with camera preview, top controls, language chips, and OCR overlay.
 - In review mode, highlighted phrases are tappable and show a quick translation card.
+- Translate All uses an image overlay approach to replace the detected text visually instead of navigating away.
 - Translate screen follows the provided design with two large panels and a centered action button.
 
 ## Data And State Changes
 
 - Add temporary state for current OCR payload, selected phrase, translated phrase, and scan review mode.
 - Add language pair state shared by scan and translate screens through intent extras.
-- No database schema changes in this feature.
+- Save actions hand off term/definition data into the shared flashcard library store.
 
 ## Technical Approach
 
@@ -63,7 +64,8 @@ Build the Scan Text and Translate flow for the Flash Card app with realtime OCR 
 - User can open Scan Text and see realtime camera preview.
 - OCR regions appear on top of live preview when text is visible.
 - After capture or gallery pick, user can tap a highlighted phrase and see its translation.
-- User can use Translate All to open the translate screen with the full OCR result.
+- User can use Translate All to translate directly on the captured image.
 - User can open Translate directly, type text, or pick an image to OCR and translate.
 - User can swap between English and Vietnamese translation directions.
+- User can save a translated phrase from Scan Text and Translate into a flashcard collection.
 - New screens follow the current app's XML/ViewBinding conventions.

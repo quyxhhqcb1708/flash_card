@@ -1,7 +1,7 @@
 <resources>
-    <string name="auth_google_not_configured">Google Sign-In chua duoc cau hinh. Anh them SHA-1/SHA-256 trong Firebase roi tai lai google-services.json nhe.</string>
-    <string name="auth_google_missing_token">Khong lay duoc Google ID token</string>
-    <string name="auth_google_cancelled">Dang nhap Google da bi huy</string>
+    <string name="auth_google_not_configured">Google Sign-In is not configured yet. Add SHA-1 and SHA-256 in Firebase, then download the latest google-services.json.</string>
+    <string name="auth_google_missing_token">Unable to get the Google ID token.</string>
+    <string name="auth_google_cancelled">Google Sign-In was cancelled.</string>
     <string name="auth_reset_title">Reset password</string>
     <string name="auth_reset_subtitle">Please enter your\nemail to reset the password</string>
     <string name="auth_reset_action">Reset Password</string>

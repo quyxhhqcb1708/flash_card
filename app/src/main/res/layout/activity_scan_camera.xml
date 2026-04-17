@@ -226,7 +226,7 @@
                     android:textSize="18sp" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnGoToTranslate"
+                    android:id="@+id/btnSaveSelection"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_gravity="end"
@@ -237,7 +237,7 @@
                     android:insetBottom="0dp"
                     android:minWidth="0dp"
                     android:paddingHorizontal="18dp"
-                    android:text="@string/scan_go_to_translate"
+                    android:text="@string/scan_save"
                     android:textAllCaps="false"
                     android:textColor="@color/auth_surface"
                     app:backgroundTint="@null"

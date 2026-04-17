@@ -13,6 +13,8 @@ import androidx.core.widget.doAfterTextChanged
 import com.example.xq.flashcard.R
 import com.example.xq.flashcard.base.BaseActivity
 import com.example.xq.flashcard.databinding.ActivityTranslateBinding
+import com.example.xq.flashcard.ui.library.CreateCollectionActivity
+import com.example.xq.flashcard.ui.library.SaveToFlashcardActivity
 import com.example.xq.flashcard.ui.scan.ImageBitmapLoader
 import com.example.xq.flashcard.ui.scan.TextRecognitionCoordinator
 
@@ -34,6 +36,15 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
     private var targetLanguage = AppTranslationLanguage.VIETNAMESE
     private var internalTextChange = false
     private var hasTranslationResult = false
+
+    private val saveFlashcardLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == android.app.Activity.RESULT_OK) {
+                result.data?.getStringExtra(CreateCollectionActivity.EXTRA_RESULT_MESSAGE)?.let {
+                    Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
@@ -93,7 +104,7 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
         binding.btnPickImage.setOnClickListener { pickImageLauncher.launch("image/*") }
         binding.btnSwapLanguage.setOnClickListener { swapLanguages() }
         binding.btnFlashCard.setOnClickListener {
-            Toast.makeText(this, R.string.scan_flashcard_coming_soon, Toast.LENGTH_SHORT).show()
+            saveCurrentFlashcard()
         }
         binding.btnCopyResult.setOnClickListener { copyResultToClipboard() }
         binding.etSource.doAfterTextChanged { editable ->
@@ -209,6 +220,24 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.setPrimaryClip(ClipData.newPlainText("translation", binding.tvResult.text))
         Toast.makeText(this, R.string.scan_copy_done, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun saveCurrentFlashcard() {
+        val sourceText = binding.etSource.text?.toString().orEmpty().trim()
+        val translatedText = binding.tvResult.text?.toString().orEmpty().trim()
+        if (sourceText.isBlank() || !hasTranslationResult) {
+            Toast.makeText(this, R.string.scan_input_empty, Toast.LENGTH_SHORT).show()
+            return
+        }
+        saveFlashcardLauncher.launch(
+            SaveToFlashcardActivity.createIntent(
+                context = this,
+                term = sourceText,
+                definition = translatedText.ifBlank { sourceText },
+                sourceLanguageCode = sourceLanguage.mlKitCode,
+                targetLanguageCode = targetLanguage.mlKitCode
+            )
+        )
     }
 
     private fun cancelPendingTranslation() {

@@ -17,7 +17,7 @@ class AuthService(
     ) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError(it.localizedMessage ?: "Dang nhap that bai") }
+            .addOnFailureListener { onError(it.localizedMessage ?: "Unable to sign in.") }
     }
 
     fun register(
@@ -28,7 +28,7 @@ class AuthService(
     ) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError(it.localizedMessage ?: "Dang ky that bai") }
+            .addOnFailureListener { onError(it.localizedMessage ?: "Unable to create the account.") }
     }
 
     fun sendPasswordResetEmail(
@@ -39,7 +39,7 @@ class AuthService(
         firebaseAuth.sendPasswordResetEmail(email)
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener {
-                onError(it.localizedMessage ?: "Khong the gui email dat lai mat khau")
+                onError(it.localizedMessage ?: "Unable to send the password reset email.")
             }
     }
 
@@ -51,7 +51,7 @@ class AuthService(
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         firebaseAuth.signInWithCredential(credential)
             .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError(it.localizedMessage ?: "Dang nhap Google that bai") }
+            .addOnFailureListener { onError(it.localizedMessage ?: "Google Sign-In failed.") }
     }
 
     fun signOut() {

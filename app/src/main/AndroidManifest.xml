@@ -20,6 +20,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlashCard">
         <activity
+            android:name=".ui.library.LibraryCollectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.library.CreateCollectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.library.SaveToFlashcardActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.translate.TranslateActivity"
             android:exported="false" />
         <activity
