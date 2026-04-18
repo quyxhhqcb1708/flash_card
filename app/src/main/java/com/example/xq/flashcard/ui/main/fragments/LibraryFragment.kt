@@ -12,6 +12,7 @@ import com.example.xq.flashcard.base.BaseFragment
 import com.example.xq.flashcard.databinding.FragmentLibraryBinding
 import com.example.xq.flashcard.databinding.ItemLibraryCollectionBinding
 import com.example.xq.flashcard.ui.library.CreateCollectionActivity
+import com.example.xq.flashcard.ui.library.FlashCardDisplayFormatter
 import com.example.xq.flashcard.ui.library.FlashCardLibraryStore
 import com.example.xq.flashcard.ui.library.LibraryCollectionActivity
 import com.example.xq.flashcard.ui.library.LibraryUiHelper
@@ -70,9 +71,14 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
         } else {
             allCollections.filter { it.name.contains(searchQuery, ignoreCase = true) }
         }
+        val totalCards = allCollections.sumOf { it.cards.size }
+        val totalReadyCards = allCollections.sumOf {
+            FlashCardLibraryStore.getPracticeSummary(it).readyToReviewCards
+        }
 
         binding.collectionsContainer.removeAllViews()
         filteredCollections.forEach { collection ->
+            val practiceSummary = FlashCardLibraryStore.getPracticeSummary(collection)
             val itemBinding = ItemLibraryCollectionBinding.inflate(layoutInflater, binding.collectionsContainer, false)
             itemBinding.coverFrame.setBackgroundResource(
                 LibraryUiHelper.getCoverBackgroundRes(collection.id, collection.name)
@@ -80,11 +86,23 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
             itemBinding.tvCollectionInitial.text = LibraryUiHelper.getCollectionInitial(collection.name)
             itemBinding.tvCollectionName.text = collection.name
             itemBinding.tvCollectionCount.text = getString(R.string.library_count_label, collection.cards.size)
-            itemBinding.root.setOnClickListener {
-                val intent = Intent(requireContext(), LibraryCollectionActivity::class.java).apply {
-                    putExtra(LibraryCollectionActivity.EXTRA_COLLECTION_ID, collection.id)
+            itemBinding.tvPracticeSummary.text = getString(
+                R.string.library_summary_ready_mastered,
+                practiceSummary.readyToReviewCards,
+                practiceSummary.masteredCards
+            )
+            itemBinding.tvLastPractice.text = getString(
+                R.string.library_summary_last_practice,
+                if (practiceSummary.lastPracticedAt > 0L) {
+                    FlashCardDisplayFormatter.formatSavedAt(practiceSummary.lastPracticedAt)
+                } else {
+                    getString(R.string.library_summary_no_practice)
                 }
-                collectionDetailLauncher.launch(intent)
+            )
+            itemBinding.root.setOnClickListener {
+                collectionDetailLauncher.launch(
+                    LibraryCollectionActivity.createIntent(requireContext(), collection.id)
+                )
             }
             itemBinding.btnCollectionMenu.setOnClickListener { anchor ->
                 showCollectionMenu(anchor, collection.id, collection.name)
@@ -94,6 +112,11 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
 
         val hasCollections = allCollections.isNotEmpty()
         val hasFilteredResults = filteredCollections.isNotEmpty()
+        binding.overviewCard.isVisible = hasCollections
+        binding.topicsSectionContainer.isVisible = hasCollections && hasFilteredResults
+        binding.tvOverviewTopicsValue.text = allCollections.size.toString()
+        binding.tvOverviewCardsValue.text = totalCards.toString()
+        binding.tvOverviewReadyValue.text = totalReadyCards.toString()
         binding.emptyStateContainer.isVisible = !hasCollections
         binding.tvSearchEmpty.isVisible = hasCollections && !hasFilteredResults
         binding.collectionsContainer.isVisible = hasFilteredResults

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/auth_surface"
@@ -54,25 +55,18 @@
         android:id="@+id/tvCollectionTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
         android:textColor="@color/auth_text_primary"
         android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
         app:layout_constraintEnd_toStartOf="@id/btnMore"
         app:layout_constraintStart_toEndOf="@id/btnBack"
-        app:layout_constraintTop_toTopOf="@id/btnBack" />
-
-    <TextView
-        android:id="@+id/tvCollectionCount"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/auth_text_hint"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toStartOf="@id/btnMore"
-        app:layout_constraintStart_toEndOf="@id/btnBack"
-        app:layout_constraintTop_toBottomOf="@id/tvCollectionTitle" />
+        app:layout_constraintTop_toTopOf="@id/btnBack"
+        tools:text="IELTS Speaking" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/contentScroll"
@@ -84,12 +78,138 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvCollectionCount">
+        app:layout_constraintTop_toBottomOf="@id/btnBack">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/heroCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_library_overview_card"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/tvHeroHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library_collection_header"
+                    android:textColor="@color/library_chip_text"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvCollectionCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/auth_text_primary"
+                    android:textSize="28sp"
+                    tools:text="12 flashcards" />
+
+                <TextView
+                    android:id="@+id/tvHeroSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/library_collection_subtitle"
+                    android:textColor="@color/auth_text_secondary"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvReadyCount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_library_stat_chip"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="10dp"
+                        android:textColor="@color/library_chip_text"
+                        android:textSize="13sp"
+                        tools:text="9 ready to review" />
+
+                    <Space
+                        android:layout_width="10dp"
+                        android:layout_height="1dp" />
+
+                    <TextView
+                        android:id="@+id/tvMasteredCount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_library_stat_chip"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="10dp"
+                        android:textColor="@color/library_chip_text"
+                        android:textSize="13sp"
+                        tools:text="3 mastered" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvPracticedCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_library_stat_chip"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="10dp"
+                    android:textColor="@color/library_chip_text"
+                    android:textSize="13sp"
+                    tools:text="6 practiced" />
+
+                <TextView
+                    android:id="@+id/tvLastPractice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:textColor="@color/auth_text_secondary"
+                    android:textSize="13sp"
+                    tools:text="Last practice 18/04/2026 13:45" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPracticeTopic"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/bg_auth_primary_button"
+                    android:backgroundTint="@null"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="@string/library_collection_practice"
+                    android:textAllCaps="false"
+                    android:textColor="@color/auth_surface"
+                    app:backgroundTint="@null"
+                    app:strokeWidth="0dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvCardsSectionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/library_collection_cards_title"
+                android:textColor="@color/auth_text_primary"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tvCardsSectionSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/library_collection_cards_subtitle"
+                android:textColor="@color/auth_text_secondary"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvEmptyState"
@@ -106,6 +226,7 @@
                 android:id="@+id/flashcardsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

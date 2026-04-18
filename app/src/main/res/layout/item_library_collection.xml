@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="14dp"
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@color/auth_surface"
-    app:cardCornerRadius="22dp"
+    app:cardCornerRadius="24dp"
     app:cardElevation="2dp"
     app:strokeColor="@color/auth_stroke"
     app:strokeWidth="1dp">
@@ -14,15 +15,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="92dp"
-        android:padding="14dp">
+        android:minHeight="116dp"
+        android:padding="16dp">
 
         <FrameLayout
             android:id="@+id/coverFrame"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
             android:background="@drawable/bg_library_cover_pink"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -33,7 +33,8 @@
                 android:layout_gravity="center"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/auth_surface"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                tools:text="I" />
         </FrameLayout>
 
         <TextView
@@ -48,7 +49,8 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@id/btnCollectionMenu"
             app:layout_constraintStart_toEndOf="@id/coverFrame"
-            app:layout_constraintTop_toTopOf="@id/coverFrame" />
+            app:layout_constraintTop_toTopOf="@id/coverFrame"
+            tools:text="IELTS Speaking" />
 
         <TextView
             android:id="@+id/tvCollectionCount"
@@ -60,14 +62,14 @@
             android:textSize="13sp"
             app:layout_constraintEnd_toStartOf="@id/btnCollectionMenu"
             app:layout_constraintStart_toEndOf="@id/coverFrame"
-            app:layout_constraintTop_toBottomOf="@id/tvCollectionName" />
+            app:layout_constraintTop_toBottomOf="@id/tvCollectionName"
+            tools:text="12 flashcards" />
 
         <FrameLayout
             android:id="@+id/btnCollectionMenu"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:foreground="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintBottom_toBottomOf="@id/coverFrame"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/coverFrame">
 
@@ -78,6 +80,33 @@
                 android:contentDescription="@string/library_menu_content_desc"
                 android:src="@drawable/ic_library_more" />
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvPracticeSummary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_library_stat_chip"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:textColor="@color/library_chip_text"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coverFrame"
+            tools:text="8 ready / 4 mastered" />
+
+        <TextView
+            android:id="@+id/tvLastPractice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/auth_text_secondary"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvPracticeSummary"
+            tools:text="Last practice: No practice yet" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

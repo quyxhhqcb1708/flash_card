@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import com.example.xq.flashcard.R
 import com.example.xq.flashcard.base.BaseActivity
 import com.example.xq.flashcard.databinding.ActivitySaveToFlashcardBinding
@@ -47,6 +48,7 @@ class SaveToFlashcardActivity : BaseActivity<ActivitySaveToFlashcardBinding>() {
     private val definition by lazy { intent.getStringExtra(EXTRA_DEFINITION).orEmpty().trim() }
     private val sourceLanguageCode by lazy { intent.getStringExtra(EXTRA_SOURCE_LANGUAGE).orEmpty() }
     private val targetLanguageCode by lazy { intent.getStringExtra(EXTRA_TARGET_LANGUAGE).orEmpty() }
+    private var selectedDifficulty: FlashCardDifficulty = FlashCardDifficulty.MEDIUM
 
     override fun inflateViewBinding(layoutInflater: android.view.LayoutInflater): ActivitySaveToFlashcardBinding {
         return ActivitySaveToFlashcardBinding.inflate(layoutInflater)
@@ -66,6 +68,10 @@ class SaveToFlashcardActivity : BaseActivity<ActivitySaveToFlashcardBinding>() {
     private fun setupUi() {
         binding.btnBack.setOnClickListener { finish() }
         binding.btnClose.setOnClickListener { finish() }
+        binding.btnDifficultyEasy.setOnClickListener { updateDifficultySelection(FlashCardDifficulty.EASY) }
+        binding.btnDifficultyMedium.setOnClickListener { updateDifficultySelection(FlashCardDifficulty.MEDIUM) }
+        binding.btnDifficultyHard.setOnClickListener { updateDifficultySelection(FlashCardDifficulty.HARD) }
+        updateDifficultySelection(selectedDifficulty)
         binding.rowCreateCollection.setOnClickListener {
             createCollectionLauncher.launch(
                 CreateCollectionActivity.createIntentForSave(
@@ -73,10 +79,50 @@ class SaveToFlashcardActivity : BaseActivity<ActivitySaveToFlashcardBinding>() {
                     term = term,
                     definition = definition.ifBlank { term },
                     sourceLanguageCode = sourceLanguageCode,
-                    targetLanguageCode = targetLanguageCode
+                    targetLanguageCode = targetLanguageCode,
+                    manualDifficulty = selectedDifficulty
                 )
             )
         }
+    }
+
+    private fun updateDifficultySelection(difficulty: FlashCardDifficulty) {
+        selectedDifficulty = difficulty
+        bindDifficultyButton(
+            button = binding.btnDifficultyEasy,
+            isSelected = difficulty == FlashCardDifficulty.EASY,
+            selectedBackgroundRes = R.drawable.bg_difficulty_easy,
+            selectedTextColorRes = R.color.library_success_text
+        )
+        bindDifficultyButton(
+            button = binding.btnDifficultyMedium,
+            isSelected = difficulty == FlashCardDifficulty.MEDIUM,
+            selectedBackgroundRes = R.drawable.bg_difficulty_medium,
+            selectedTextColorRes = R.color.practice_medium_text
+        )
+        bindDifficultyButton(
+            button = binding.btnDifficultyHard,
+            isSelected = difficulty == FlashCardDifficulty.HARD,
+            selectedBackgroundRes = R.drawable.bg_difficulty_hard,
+            selectedTextColorRes = R.color.practice_hard_text
+        )
+    }
+
+    private fun bindDifficultyButton(
+        button: com.google.android.material.button.MaterialButton,
+        isSelected: Boolean,
+        selectedBackgroundRes: Int,
+        selectedTextColorRes: Int
+    ) {
+        button.setBackgroundResource(
+            if (isSelected) selectedBackgroundRes else R.drawable.bg_difficulty_unselected
+        )
+        button.setTextColor(
+            ContextCompat.getColor(
+                this,
+                if (isSelected) selectedTextColorRes else R.color.auth_text_secondary
+            )
+        )
     }
 
     private fun bindCollections() {
@@ -95,7 +141,8 @@ class SaveToFlashcardActivity : BaseActivity<ActivitySaveToFlashcardBinding>() {
                     term = term,
                     definition = definition.ifBlank { term },
                     sourceLanguageCode = sourceLanguageCode,
-                    targetLanguageCode = targetLanguageCode
+                    targetLanguageCode = targetLanguageCode,
+                    manualDifficulty = selectedDifficulty
                 )
                 if (result == null) {
                     Toast.makeText(this, R.string.scan_translation_error, Toast.LENGTH_SHORT).show()

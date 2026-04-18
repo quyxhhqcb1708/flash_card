@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="14dp"
@@ -22,7 +23,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/auth_text_primary"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="annual" />
 
         <TextView
             android:id="@+id/tvDefinition"
@@ -30,7 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/auth_text_secondary"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="hang nam" />
 
         <TextView
             android:id="@+id/tvLanguagePair"
@@ -38,15 +41,29 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:textColor="@color/auth_text_hint"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="English to Vietnamese" />
+
+        <TextView
+            android:id="@+id/tvPracticeMeta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_library_stat_chip"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="7dp"
+            android:textColor="@color/library_chip_text"
+            android:textSize="12sp"
+            tools:text="64% mastery after 3 reviews" />
 
         <TextView
             android:id="@+id/tvSavedAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="10dp"
             android:textColor="@color/auth_text_hint"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tools:text="Saved 18/04/2026 14:35" />
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

@@ -126,7 +126,7 @@
                         android:id="@+id/ivUser"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
-                        android:src="@drawable/ic_nav_user"
+                        android:src="@drawable/ic_nav_progress"
                         app:tint="@color/main_nav_unselected" />
 
                     <TextView

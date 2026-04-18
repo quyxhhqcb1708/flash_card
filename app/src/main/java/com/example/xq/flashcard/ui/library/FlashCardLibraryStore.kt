@@ -1,6 +1,7 @@
 package com.example.xq.flashcard.ui.library
 
 import android.content.Context
+import com.example.xq.flashcard.ui.practice.Sm2Scheduler
 import com.example.xq.flashcard.utils.sharedpreference.SharePreferUtils
 import org.json.JSONArray
 import org.json.JSONObject
@@ -11,8 +12,17 @@ data class FlashCardItem(
     val definition: String,
     val sourceLanguageCode: String,
     val targetLanguageCode: String,
+    val manualDifficulty: FlashCardDifficulty = FlashCardDifficulty.MEDIUM,
     val createdAt: Long,
-    val updatedAt: Long
+    val updatedAt: Long,
+    val practiceCount: Int = 0,
+    val correctCount: Int = 0,
+    val lastPracticedAt: Long = 0L,
+    val easinessFactor: Double = Sm2Scheduler.DEFAULT_EASINESS_FACTOR,
+    val repetitions: Int = 0,
+    val intervalDays: Int = 0,
+    val nextReviewAt: Long = 0L,
+    val lastReviewQuality: Int = -1
 )
 
 data class FlashCardCollection(
@@ -33,6 +43,15 @@ data class FlashCardSaveResult(
     val collectionId: Long,
     val collectionName: String,
     val cardId: Long
+)
+
+data class FlashCardPracticeSummary(
+    val totalCards: Int,
+    val practicedCards: Int,
+    val masteredCards: Int,
+    val readyToReviewCards: Int,
+    val upcomingCards: Int,
+    val lastPracticedAt: Long
 )
 
 object FlashCardLibraryStore {
@@ -61,6 +80,10 @@ object FlashCardLibraryStore {
         return getCollections(context).firstOrNull { it.id == collectionId }
     }
 
+    fun getCard(context: Context, collectionId: Long, cardId: Long): FlashCardItem? {
+        return getCollection(context, collectionId)?.cards?.firstOrNull { it.id == cardId }
+    }
+
     fun getAllCards(context: Context): List<RecentFlashCardEntry> {
         return getCollections(context)
             .flatMap { collection ->
@@ -73,6 +96,24 @@ object FlashCardLibraryStore {
                 }
             }
             .sortedByDescending { it.card.updatedAt }
+    }
+
+    fun getPracticeSummary(collection: FlashCardCollection): FlashCardPracticeSummary {
+        val now = System.currentTimeMillis()
+        val practicedCards = collection.cards.count { it.practiceCount > 0 }
+        val masteredCards = collection.cards.count(Sm2Scheduler::isMastered)
+        val readyToReviewCards = collection.cards.count { Sm2Scheduler.isDueToday(it, now) }
+        val lastPracticedAt = collection.cards.maxOfOrNull { it.lastPracticedAt } ?: 0L
+        return FlashCardPracticeSummary(
+            totalCards = collection.cards.size,
+            practicedCards = practicedCards,
+            masteredCards = masteredCards,
+            readyToReviewCards = readyToReviewCards,
+            upcomingCards = collection.cards.count {
+                !Sm2Scheduler.isDueToday(it, now) && !Sm2Scheduler.isMastered(it)
+            },
+            lastPracticedAt = lastPracticedAt
+        )
     }
 
     fun createCollection(context: Context, name: String): FlashCardCollection {
@@ -137,7 +178,8 @@ object FlashCardLibraryStore {
         term: String,
         definition: String,
         sourceLanguageCode: String,
-        targetLanguageCode: String
+        targetLanguageCode: String,
+        manualDifficulty: FlashCardDifficulty = FlashCardDifficulty.MEDIUM
     ): FlashCardSaveResult? {
         val normalizedTerm = term.trim()
         val normalizedDefinition = definition.trim().ifBlank { normalizedTerm }
@@ -158,6 +200,7 @@ object FlashCardLibraryStore {
                     definition = normalizedDefinition,
                     sourceLanguageCode = sourceLanguageCode,
                     targetLanguageCode = targetLanguageCode,
+                    manualDifficulty = manualDifficulty,
                     updatedAt = currentTime
                 )
             } else {
@@ -167,8 +210,10 @@ object FlashCardLibraryStore {
                     definition = normalizedDefinition,
                     sourceLanguageCode = sourceLanguageCode,
                     targetLanguageCode = targetLanguageCode,
+                    manualDifficulty = manualDifficulty,
                     createdAt = currentTime,
-                    updatedAt = currentTime
+                    updatedAt = currentTime,
+                    nextReviewAt = 0L
                 )
             }
 
@@ -253,6 +298,57 @@ object FlashCardLibraryStore {
         return removed
     }
 
+    fun recordReviewQuality(
+        context: Context,
+        collectionId: Long,
+        cardId: Long,
+        quality: Int
+    ): FlashCardItem? {
+        val reviewedAt = System.currentTimeMillis()
+        var updatedCard: FlashCardItem? = null
+        val updatedCollections = getCollections(context).map { collection ->
+            if (collection.id != collectionId) return@map collection
+
+            val updatedCards = collection.cards.map { card ->
+                if (card.id != cardId) {
+                    card
+                } else {
+                    val reviewResult = Sm2Scheduler.applyReview(card, quality, reviewedAt)
+                    card.copy(
+                        practiceCount = card.practiceCount + 1,
+                        correctCount = card.correctCount + if (quality >= 3) 1 else 0,
+                        lastPracticedAt = reviewedAt,
+                        updatedAt = reviewedAt,
+                        easinessFactor = reviewResult.easinessFactor,
+                        repetitions = reviewResult.repetitions,
+                        intervalDays = reviewResult.intervalDays,
+                        nextReviewAt = reviewResult.nextReviewAt,
+                        lastReviewQuality = quality
+                    ).also { updatedCard = it }
+                }
+            }
+
+            collection.copy(
+                updatedAt = reviewedAt,
+                cards = updatedCards.sortedByDescending { it.updatedAt }
+            )
+        }
+
+        if (updatedCard != null) {
+            persist(context, updatedCollections)
+        }
+        return updatedCard
+    }
+
+    fun getMasteryRate(card: FlashCardItem): Float {
+        if (card.practiceCount <= 0) return 0f
+        return card.correctCount.toFloat() / card.practiceCount.toFloat()
+    }
+
+    fun isMastered(card: FlashCardItem): Boolean {
+        return Sm2Scheduler.isMastered(card)
+    }
+
     private fun persist(context: Context, collections: List<FlashCardCollection>) {
         SharePreferUtils.init(context)
         val jsonArray = JSONArray()
@@ -272,8 +368,17 @@ object FlashCardLibraryStore {
                                     .put("definition", card.definition)
                                     .put("sourceLanguageCode", card.sourceLanguageCode)
                                     .put("targetLanguageCode", card.targetLanguageCode)
+                                    .put("manualDifficulty", card.manualDifficulty.persistedValue)
                                     .put("createdAt", card.createdAt)
                                     .put("updatedAt", card.updatedAt)
+                                    .put("practiceCount", card.practiceCount)
+                                    .put("correctCount", card.correctCount)
+                                    .put("lastPracticedAt", card.lastPracticedAt)
+                                    .put("easinessFactor", card.easinessFactor)
+                                    .put("repetitions", card.repetitions)
+                                    .put("intervalDays", card.intervalDays)
+                                    .put("nextReviewAt", card.nextReviewAt)
+                                    .put("lastReviewQuality", card.lastReviewQuality)
                             )
                         }
                     })
@@ -294,8 +399,22 @@ object FlashCardLibraryStore {
                         definition = item.optString("definition"),
                         sourceLanguageCode = item.optString("sourceLanguageCode"),
                         targetLanguageCode = item.optString("targetLanguageCode"),
+                        manualDifficulty = FlashCardDifficulty.fromValue(
+                            item.optString("manualDifficulty")
+                        ),
                         createdAt = item.optLong("createdAt"),
-                        updatedAt = item.optLong("updatedAt")
+                        updatedAt = item.optLong("updatedAt"),
+                        practiceCount = item.optInt("practiceCount"),
+                        correctCount = item.optInt("correctCount"),
+                        lastPracticedAt = item.optLong("lastPracticedAt"),
+                        easinessFactor = item.optDouble(
+                            "easinessFactor",
+                            Sm2Scheduler.DEFAULT_EASINESS_FACTOR
+                        ),
+                        repetitions = item.optInt("repetitions"),
+                        intervalDays = item.optInt("intervalDays"),
+                        nextReviewAt = item.optLong("nextReviewAt"),
+                        lastReviewQuality = item.optInt("lastReviewQuality", -1)
                     )
                 )
             }

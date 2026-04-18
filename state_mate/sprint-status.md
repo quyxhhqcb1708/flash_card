@@ -27,11 +27,41 @@
 ## Sprint Flashcard Library
 
 - Status: Completed
-- Scope: Build Library collections, save-to-flashcard flow, and shared local flashcard storage.
+- Scope: Build Library collections, save-to-flashcard flow, shared local flashcard storage, and topic-based practice inside Library.
 - Progress Notes:
   - PRD created for Library and flashcard save flow.
   - Added `FlashCardLibraryStore` with collection-based local storage.
   - Added `SaveToFlashcardActivity`, `CreateCollectionActivity`, and `LibraryCollectionActivity`.
-  - Updated `LibraryFragment` and `CardFragment` to render collection data and recent flashcards.
+  - Upgraded `LibraryFragment` to show topic overview, search, and practice-ready states per collection.
+  - Upgraded `LibraryCollectionActivity` with topic summary and `Practice this topic` CTA.
+  - Added save-time difficulty tagging (`Easy / Medium / Hard`) in the flashcard save flow.
   - Standardized touched auth/main/scan/translate/library strings to English.
+  - Build validation completed with `assembleDebug`.
+
+## Sprint Practice SRS
+
+- Status: Completed
+- Scope: Replace the old Card tab with a Practice tab backed by SM-2 spaced repetition across all Library flashcards, using a 15-question multiple-choice review flow.
+- Progress Notes:
+  - PRD created for SRS practice flow and review session behavior.
+  - Added `Sm2Scheduler` with EF, interval, reset, and due-day logic.
+  - Added `PracticeFragment` dashboard grouped by review day.
+  - Added `ReviewSessionActivity` with 15-question multiple-choice sessions and 4 answer options per question.
+  - Added weighted question generation based on due state, save-time difficulty, EF, and previous mistakes.
+  - Reused the same review session from `LibraryCollectionActivity` for topic review.
+  - Extended `FlashCardLibraryStore` to persist SM-2 state on each flashcard.
+  - Added manual difficulty persistence from save time as an extra review signal.
+  - Build validation completed with `assembleDebug`.
+
+## Sprint Progress Analytics
+
+- Status: Completed
+- Scope: Replace the bottom-nav User tab with a learning progress dashboard and move the account/profile UI into Setting.
+- Progress Notes:
+  - PRD created for progress analytics and dashboard behavior.
+  - Replaced the bottom-nav `User` destination with a new `ProgressFragment`.
+  - Added a snapshot progress dashboard with total saved words, mastered words, due-today count, accuracy, topic count, and practiced count.
+  - Added a custom chart view to visualize due, building, scheduled, and stable vocabulary.
+  - Added topic-health cards sorted by review pressure and linked them to `LibraryCollectionActivity`.
+  - Moved the old profile/logout screen into `UserProfileActivity`, opened from `Setting > User`.
   - Build validation completed with `assembleDebug`.

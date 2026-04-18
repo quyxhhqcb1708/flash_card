@@ -20,6 +20,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlashCard">
         <activity
+            android:name=".ui.settings.UserProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.practice.ReviewSessionActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.library.LibraryCollectionActivity"
             android:exported="false" />
         <activity

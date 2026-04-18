@@ -35,13 +35,13 @@ class MainActivity : AppCompatActivity(), MainNavigationHost {
     private fun setupBottomNavigation() {
         binding.navHome.setOnClickListener { openScanText() }
         binding.homeButtonWrapper.setOnClickListener { openScanText() }
-        binding.navCard.setOnClickListener { openCard() }
+        binding.navCard.setOnClickListener { openPractice() }
         binding.navLibrary.setOnClickListener { openLibrary() }
-        binding.navUser.setOnClickListener { openUser() }
+        binding.navUser.setOnClickListener { openProgress() }
         binding.navSetting.setOnClickListener { openSetting() }
     }
 
-    override fun openCard() {
+    override fun openPractice() {
         binding.viewPager.currentItem = 0
     }
 
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), MainNavigationHost {
         binding.viewPager.currentItem = 2
     }
 
-    override fun openUser() {
+    override fun openProgress() {
         binding.viewPager.currentItem = 3
     }
 

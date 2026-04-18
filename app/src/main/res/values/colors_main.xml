@@ -4,4 +4,27 @@
     <color name="main_nav_unselected">#FFC3C4CA</color>
     <color name="main_nav_shadow">#1A5262FF</color>
     <color name="main_delete">#FFEC4C4C</color>
+    <color name="library_surface_soft">#FFF7F8FF</color>
+    <color name="library_chip_bg">#FFF1F4FF</color>
+    <color name="library_chip_text">#FF685DDA</color>
+    <color name="library_review_bg">#FFFFF2F2</color>
+    <color name="library_review_text">#FFE35D5D</color>
+    <color name="library_success_bg">#FFF2FBF6</color>
+    <color name="library_success_text">#FF2D9C63</color>
+    <color name="library_progress_track">#FFE6E8F3</color>
+    <color name="practice_hard_bg">#FFFFF0F0</color>
+    <color name="practice_hard_text">#FFE45C5C</color>
+    <color name="practice_medium_bg">#FFF4F2FF</color>
+    <color name="practice_medium_text">#FF6A5BFF</color>
+    <color name="practice_summary_bg">#FFF7F9FF</color>
+    <color name="progress_due">#FFF28C38</color>
+    <color name="progress_learning">#FF6A5BFF</color>
+    <color name="progress_upcoming">#FF85A3D4</color>
+    <color name="progress_stable">#FF2D9C63</color>
+    <color name="progress_track">#FFF0F2F8</color>
+    <color name="progress_stat_bg">#FFFFFFFF</color>
+    <color name="progress_stat_stroke">#FFE7E9F3</color>
+    <color name="progress_focus_bg">#FFF6F8FF</color>
+    <color name="progress_due_bg">#FFFFF5EA</color>
+    <color name="progress_upcoming_bg">#FFF2F7FF</color>
 </resources>

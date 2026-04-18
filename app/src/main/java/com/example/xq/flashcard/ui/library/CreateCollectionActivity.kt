@@ -22,6 +22,7 @@ class CreateCollectionActivity : BaseActivity<ActivityCreateCollectionBinding>()
         private const val EXTRA_PENDING_DEFINITION = "extra_pending_definition"
         private const val EXTRA_PENDING_SOURCE_LANGUAGE = "extra_pending_source_language"
         private const val EXTRA_PENDING_TARGET_LANGUAGE = "extra_pending_target_language"
+        private const val EXTRA_PENDING_DIFFICULTY = "extra_pending_difficulty"
 
         private const val MODE_CREATE = "mode_create"
         private const val MODE_RENAME = "mode_rename"
@@ -37,13 +38,15 @@ class CreateCollectionActivity : BaseActivity<ActivityCreateCollectionBinding>()
             term: String,
             definition: String,
             sourceLanguageCode: String,
-            targetLanguageCode: String
+            targetLanguageCode: String,
+            manualDifficulty: FlashCardDifficulty
         ): Intent {
             return createIntent(context).apply {
                 putExtra(EXTRA_PENDING_TERM, term)
                 putExtra(EXTRA_PENDING_DEFINITION, definition)
                 putExtra(EXTRA_PENDING_SOURCE_LANGUAGE, sourceLanguageCode)
                 putExtra(EXTRA_PENDING_TARGET_LANGUAGE, targetLanguageCode)
+                putExtra(EXTRA_PENDING_DIFFICULTY, manualDifficulty.persistedValue)
             }
         }
 
@@ -63,6 +66,9 @@ class CreateCollectionActivity : BaseActivity<ActivityCreateCollectionBinding>()
     private val pendingDefinition by lazy { intent.getStringExtra(EXTRA_PENDING_DEFINITION).orEmpty().trim() }
     private val pendingSourceLanguage by lazy { intent.getStringExtra(EXTRA_PENDING_SOURCE_LANGUAGE).orEmpty() }
     private val pendingTargetLanguage by lazy { intent.getStringExtra(EXTRA_PENDING_TARGET_LANGUAGE).orEmpty() }
+    private val pendingDifficulty by lazy {
+        FlashCardDifficulty.fromValue(intent.getStringExtra(EXTRA_PENDING_DIFFICULTY))
+    }
 
     override fun inflateViewBinding(layoutInflater: android.view.LayoutInflater): ActivityCreateCollectionBinding {
         return ActivityCreateCollectionBinding.inflate(layoutInflater)
@@ -134,14 +140,15 @@ class CreateCollectionActivity : BaseActivity<ActivityCreateCollectionBinding>()
         }
 
         val createdCollection = FlashCardLibraryStore.createCollection(this, name)
-        val saveResult = if (pendingTerm.isNotBlank()) {
+            val saveResult = if (pendingTerm.isNotBlank()) {
             FlashCardLibraryStore.saveCard(
                 context = this,
                 collectionId = createdCollection.id,
                 term = pendingTerm,
                 definition = pendingDefinition.ifBlank { pendingTerm },
                 sourceLanguageCode = pendingSourceLanguage,
-                targetLanguageCode = pendingTargetLanguage
+                targetLanguageCode = pendingTargetLanguage,
+                manualDifficulty = pendingDifficulty
             )
         } else {
             null

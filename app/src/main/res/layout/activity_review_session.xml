@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/auth_surface"
+    android:paddingTop="32dp"
+    android:paddingHorizontal="16dp">
+
+    <View
+        android:id="@+id/topBubble"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginTop="-82dp"
+        android:layout_marginEnd="-88dp"
+        android:background="@drawable/bg_auth_bubble"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/bottomBubble"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_marginStart="-118dp"
+        android:layout_marginBottom="-110dp"
+        android:background="@drawable/bg_auth_bubble"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/btnBack"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="@drawable/bg_scan_icon_button"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_auth_arrow_back"
+            app:tint="@color/auth_text_primary" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/auth_text_primary"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
+        app:layout_constraintTop_toTopOf="@id/btnBack"
+        tools:text="1 / 15" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressIndicator"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        app:indicatorColor="@color/auth_gradient_end"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        app:layout_constraintEnd_toStartOf="@id/btnDone"
+        app:layout_constraintStart_toEndOf="@id/tvProgress"
+        app:layout_constraintTop_toTopOf="@id/btnBack"
+        app:trackColor="@color/library_progress_track"
+        tools:progress="33" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDone"
+        android:layout_width="92dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_library_secondary_button"
+        android:backgroundTint="@null"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/practice_done"
+        android:textAllCaps="false"
+        android:textColor="@color/auth_gradient_end"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnBack"
+        app:strokeWidth="0dp" />
+
+    <LinearLayout
+        android:id="@+id/reviewContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="22dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnBack">
+
+        <TextView
+            android:id="@+id/tvReviewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/practice_review_title"
+            android:textColor="@color/auth_text_primary"
+            android:textSize="26sp" />
+
+        <TextView
+            android:id="@+id/tvReviewScope"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/auth_text_secondary"
+            android:textSize="15sp"
+            tools:text="Today's due cards" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/questionCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            app:cardBackgroundColor="@color/auth_surface"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="4dp"
+            app:strokeColor="@color/auth_gradient_end"
+            app:strokeWidth="1.2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <TextView
+                    android:id="@+id/tvCollectionName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_library_stat_chip"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="8dp"
+                    android:textColor="@color/library_chip_text"
+                    android:textSize="13sp"
+                    tools:text="IELTS Speaking" />
+
+                <TextView
+                    android:id="@+id/tvPrompt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:gravity="center"
+                    android:textColor="@color/auth_text_primary"
+                    android:textSize="32sp"
+                    tools:text="Annual" />
+
+                <TextView
+                    android:id="@+id/tvLanguagePair"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:textColor="@color/auth_text_hint"
+                    android:textSize="14sp"
+                    tools:text="English -> Vietnamese" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/tvAnswerPrompt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/practice_answer_prompt"
+            android:textColor="@color/auth_text_secondary"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/optionsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOption1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_library_secondary_button"
+                android:backgroundTint="@null"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:textAllCaps="false"
+                android:textColor="@color/auth_text_primary"
+                app:backgroundTint="@null"
+                app:strokeWidth="0dp"
+                tools:text="hằng năm" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOption2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_library_secondary_button"
+                android:backgroundTint="@null"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:textAllCaps="false"
+                android:textColor="@color/auth_text_primary"
+                app:backgroundTint="@null"
+                app:strokeWidth="0dp"
+                tools:text="hàng tháng" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOption3"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_library_secondary_button"
+                android:backgroundTint="@null"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:textAllCaps="false"
+                android:textColor="@color/auth_text_primary"
+                app:backgroundTint="@null"
+                app:strokeWidth="0dp"
+                tools:text="thường niên" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOption4"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_library_secondary_button"
+                android:backgroundTint="@null"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:textAllCaps="false"
+                android:textColor="@color/auth_text_primary"
+                app:backgroundTint="@null"
+                app:strokeWidth="0dp"
+                tools:text="hàng tuần" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:textColor="@color/library_success_text"
+            android:textSize="15sp"
+            android:visibility="gone"
+            tools:text="Good job! You picked the correct answer." />
+
+        <TextView
+            android:id="@+id/tvCorrectAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:textColor="@color/auth_text_secondary"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:text="Correct answer: hằng năm" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnContinue"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_auth_primary_button"
+            android:backgroundTint="@null"
+            android:enabled="false"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/practice_continue"
+            android:textAllCaps="false"
+            android:textColor="@color/auth_surface"
+            app:backgroundTint="@null"
+            app:strokeWidth="0dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/completeContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="22dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnBack">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_practice_summary_card"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/tvCompleteTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/practice_complete_title"
+                android:textColor="@color/auth_gradient_end"
+                android:textSize="26sp" />
+
+            <TextView
+                android:id="@+id/tvCompleteSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/practice_complete_subtitle"
+                android:textColor="@color/auth_text_secondary"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tvReviewedCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/bg_library_stat_chip"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="12dp"
+                android:textColor="@color/library_chip_text"
+                android:textSize="14sp"
+                tools:text="15 reviewed" />
+
+            <TextView
+                android:id="@+id/tvCorrectCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_library_stat_chip"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="12dp"
+                android:textColor="@color/library_chip_text"
+                android:textSize="14sp"
+                tools:text="10 correct" />
+
+            <TextView
+                android:id="@+id/tvWrongCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_library_stat_chip"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="12dp"
+                android:textColor="@color/library_chip_text"
+                android:textSize="14sp"
+                tools:text="5 wrong" />
+
+            <TextView
+                android:id="@+id/tvAccuracy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_library_stat_chip"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="12dp"
+                android:textColor="@color/library_chip_text"
+                android:textSize="14sp"
+                tools:text="66% accuracy" />
+
+            <TextView
+                android:id="@+id/tvDueLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_library_stat_chip"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="12dp"
+                android:textColor="@color/library_chip_text"
+                android:textSize="14sp"
+                tools:text="2 still due today" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

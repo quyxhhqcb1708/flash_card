@@ -19,4 +19,13 @@ object LibraryUiHelper {
     fun getCollectionInitial(name: String): String {
         return name.trim().firstOrNull()?.uppercase() ?: "F"
     }
+
+    fun getSummaryProgressText(summary: FlashCardPracticeSummary): String {
+        return "${summary.readyToReviewCards} ready / ${summary.masteredCards} mastered"
+    }
+
+    fun getMasteryPercent(card: FlashCardItem): Int {
+        if (card.practiceCount <= 0) return 0
+        return (FlashCardLibraryStore.getMasteryRate(card) * 100).toInt()
+    }
 }

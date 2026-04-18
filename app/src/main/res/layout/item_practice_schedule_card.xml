@@ -1,36 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="14dp"
+    android:layout_marginBottom="12dp"
     app:cardBackgroundColor="@color/auth_surface"
-    app:cardCornerRadius="24dp"
+    app:cardCornerRadius="22dp"
     app:cardElevation="2dp"
-    app:strokeColor="@color/auth_gradient_end"
-    app:strokeWidth="1.25dp">
+    app:strokeColor="@color/auth_stroke"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="18dp">
+        android:padding="16dp">
 
         <TextView
-            android:id="@+id/tvSourceText"
+            android:id="@+id/tvDueChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_library_stat_chip"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="6dp"
+            android:textColor="@color/library_chip_text"
+            android:textSize="12sp"
+            tools:text="Due today" />
+
+        <TextView
+            android:id="@+id/tvTerm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/auth_text_primary"
-            android:textSize="19sp" />
+            android:textSize="18sp"
+            tools:text="Annual" />
 
         <TextView
-            android:id="@+id/tvTranslatedText"
+            android:id="@+id/tvDefinition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:textColor="@color/auth_text_secondary"
-            android:textSize="16sp" />
+            android:textSize="15sp"
+            tools:text="hằng năm" />
 
         <TextView
             android:id="@+id/tvCollectionName"
@@ -38,23 +53,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:textColor="@color/auth_gradient_end"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="IELTS Speaking" />
 
         <TextView
-            android:id="@+id/tvLanguagePair"
+            android:id="@+id/tvSrsMeta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:textColor="@color/auth_text_hint"
-            android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/tvCreatedAt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/auth_text_hint"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tools:text="3 reps • every 6 days • EF 2.36" />
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
