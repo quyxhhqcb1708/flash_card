@@ -21,7 +21,7 @@
     <string name="practice_due_tomorrow">Due tomorrow</string>
     <string name="practice_due_in_days">In %1$d days</string>
     <string name="practice_meta_new">New SRS card</string>
-    <string name="practice_meta_value">%1$d reps • every %2$d days • EF %3$.2f</string>
+    <string name="practice_meta_value">%1$d reps / every %2$d days / EF %3$.2f</string>
     <string name="practice_review_title">Review</string>
     <string name="practice_review_scope_all">All library cards</string>
     <string name="practice_review_scope_due">Today\'s due cards</string>

@@ -11,11 +11,12 @@ import androidx.viewbinding.ViewBinding
 import com.example.xq.flashcard.R
 import com.example.xq.flashcard.base.BaseActivity
 import com.example.xq.flashcard.databinding.LayoutAuthFormBinding
-import com.example.xq.flashcard.ui.MainActivity
+import com.example.xq.flashcard.ui.main.MainActivity
+import com.example.xq.flashcard.ui.sync.StudyCloudSyncManager
 
 abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
 
-    protected val authManager = AuthService()
+    protected val authManager by lazy { AuthService(this) }
 
     protected fun setupCommonUi(
         formBinding: LayoutAuthFormBinding,
@@ -155,8 +156,10 @@ abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
     }
 
     protected fun navigateToMain() {
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
+        StudyCloudSyncManager.bootstrapAfterLogin(this) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
     }
 
     protected fun gotoRegister() {

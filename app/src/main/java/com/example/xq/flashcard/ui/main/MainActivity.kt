@@ -1,12 +1,10 @@
-package com.example.xq.flashcard.ui
+package com.example.xq.flashcard.ui.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.xq.flashcard.R
 import com.example.xq.flashcard.databinding.ActivityMainBinding
-import com.example.xq.flashcard.ui.main.MainNavigationHost
-import com.example.xq.flashcard.ui.main.MainPagerAdapter
 
 class MainActivity : AppCompatActivity(), MainNavigationHost {
 

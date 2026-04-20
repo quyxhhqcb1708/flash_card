@@ -2,6 +2,15 @@
     <string name="auth_google_not_configured">Google Sign-In is not configured yet. Add SHA-1 and SHA-256 in Firebase, then download the latest google-services.json.</string>
     <string name="auth_google_missing_token">Unable to get the Google ID token.</string>
     <string name="auth_google_cancelled">Google Sign-In was cancelled.</string>
+    <string name="auth_error_sign_in">Unable to sign in right now. Please try again.</string>
+    <string name="auth_error_register">Unable to create the account right now. Please try again.</string>
+    <string name="auth_error_reset">Unable to send the password reset email right now.</string>
+    <string name="auth_error_google">Google Sign-In failed.</string>
+    <string name="auth_error_invalid_credentials">Incorrect email or password.</string>
+    <string name="auth_error_email_in_use">This email is already linked to another account.</string>
+    <string name="auth_error_account_not_found">No account was found for this email.</string>
+    <string name="auth_error_network">Network error. Please check your connection and try again.</string>
+    <string name="auth_error_too_many_requests">Too many requests. Please wait a moment and try again.</string>
     <string name="auth_reset_title">Reset password</string>
     <string name="auth_reset_subtitle">Please enter your\nemail to reset the password</string>
     <string name="auth_reset_action">Reset Password</string>

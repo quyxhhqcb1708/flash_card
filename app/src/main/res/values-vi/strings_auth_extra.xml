@@ -1,0 +1,19 @@
+<resources>
+    <string name="auth_google_not_configured">Google Sign-In chưa được cấu hình. Hãy thêm SHA-1 và SHA-256 trên Firebase, rồi tải lại file google-services.json mới nhất.</string>
+    <string name="auth_google_missing_token">Không thể lấy Google ID token.</string>
+    <string name="auth_google_cancelled">Đăng nhập Google đã bị hủy.</string>
+    <string name="auth_error_sign_in">Hiện chưa thể đăng nhập. Vui lòng thử lại.</string>
+    <string name="auth_error_register">Hiện chưa thể tạo tài khoản. Vui lòng thử lại.</string>
+    <string name="auth_error_reset">Hiện chưa thể gửi email đặt lại mật khẩu.</string>
+    <string name="auth_error_google">Đăng nhập Google thất bại.</string>
+    <string name="auth_error_invalid_credentials">Email hoặc mật khẩu chưa đúng.</string>
+    <string name="auth_error_email_in_use">Email này đã được liên kết với một tài khoản khác.</string>
+    <string name="auth_error_account_not_found">Không tìm thấy tài khoản cho email này.</string>
+    <string name="auth_error_network">Lỗi mạng. Bạn kiểm tra kết nối rồi thử lại nhé.</string>
+    <string name="auth_error_too_many_requests">Có quá nhiều yêu cầu. Vui lòng chờ một chút rồi thử lại.</string>
+    <string name="auth_reset_title">Đặt lại mật khẩu</string>
+    <string name="auth_reset_subtitle">Vui lòng nhập\nemail để đặt lại mật khẩu</string>
+    <string name="auth_reset_action">Đặt lại mật khẩu</string>
+    <string name="auth_reset_success">Đã gửi email đặt lại mật khẩu thành công.\nBạn vui lòng kiểm tra hộp thư và làm theo liên kết để tạo mật khẩu mới.</string>
+    <string name="auth_confirm">Xác nhận</string>
+</resources>

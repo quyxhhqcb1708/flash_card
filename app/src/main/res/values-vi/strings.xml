@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">FlashCard</string>
+    <string name="auth_login_title">Đăng nhập</string>
+    <string name="auth_login_subtitle">Chào mừng quay lại\nrất vui được gặp bạn</string>
+    <string name="auth_register_title">Đăng ký</string>
+    <string name="auth_register_subtitle">Tạo tài khoản để bắt đầu\nhọc thông minh hơn</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_email_hint">example123@gmail.com</string>
+    <string name="auth_password">Mật khẩu</string>
+    <string name="auth_password_hint">Nhập mật khẩu</string>
+    <string name="auth_confirm_password">Xác nhận mật khẩu</string>
+    <string name="auth_confirm_password_hint">Nhập lại mật khẩu</string>
+    <string name="auth_login_action">Đăng nhập</string>
+    <string name="auth_register_action">Tạo tài khoản</string>
+    <string name="auth_no_account">Chưa có tài khoản?</string>
+    <string name="auth_have_account">Đã có tài khoản?</string>
+    <string name="auth_sign_up_link">Đăng ký</string>
+    <string name="auth_sign_in_link">Đăng nhập</string>
+    <string name="auth_or">Hoặc</string>
+    <string name="auth_google_cta">Tiếp tục với Google</string>
+    <string name="auth_forgot_password">Quên mật khẩu?</string>
+    <string name="auth_invalid_email">Vui lòng nhập email hợp lệ.</string>
+    <string name="auth_invalid_password">Mật khẩu phải có ít nhất 6 ký tự.</string>
+    <string name="auth_password_not_match">Mật khẩu xác nhận không khớp.</string>
+    <string name="auth_google_placeholder">Google Sign-In chưa được bật trong luồng này.</string>
+    <string name="auth_forgot_password_placeholder">Chức năng quên mật khẩu sẽ được kết nối sau.</string>
+    <string name="auth_register_success">Tạo tài khoản thành công.</string>
+    <string name="auth_main_placeholder">Đăng nhập thành công. Màn hình này đã sẵn sàng cho luồng chính.</string>
+</resources>

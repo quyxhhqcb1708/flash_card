@@ -1,9 +1,11 @@
 package com.example.xq.flashcard.ui.login
 
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
 class AuthService(
+    private val context: Context? = null,
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 ) {
 
@@ -17,7 +19,13 @@ class AuthService(
     ) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError(it.localizedMessage ?: "Unable to sign in.") }
+            .addOnFailureListener {
+                onError(
+                    context?.let { value ->
+                        AuthErrorResolver.resolve(value, it, AuthAction.SIGN_IN)
+                    } ?: it.localizedMessage.orEmpty()
+                )
+            }
     }
 
     fun register(
@@ -28,7 +36,13 @@ class AuthService(
     ) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError(it.localizedMessage ?: "Unable to create the account.") }
+            .addOnFailureListener {
+                onError(
+                    context?.let { value ->
+                        AuthErrorResolver.resolve(value, it, AuthAction.REGISTER)
+                    } ?: it.localizedMessage.orEmpty()
+                )
+            }
     }
 
     fun sendPasswordResetEmail(
@@ -39,7 +53,11 @@ class AuthService(
         firebaseAuth.sendPasswordResetEmail(email)
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener {
-                onError(it.localizedMessage ?: "Unable to send the password reset email.")
+                onError(
+                    context?.let { value ->
+                        AuthErrorResolver.resolve(value, it, AuthAction.RESET)
+                    } ?: it.localizedMessage.orEmpty()
+                )
             }
     }
 
@@ -51,7 +69,13 @@ class AuthService(
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         firebaseAuth.signInWithCredential(credential)
             .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError(it.localizedMessage ?: "Google Sign-In failed.") }
+            .addOnFailureListener {
+                onError(
+                    context?.let { value ->
+                        AuthErrorResolver.resolve(value, it, AuthAction.GOOGLE)
+                    } ?: it.localizedMessage.orEmpty()
+                )
+            }
     }
 
     fun signOut() {

@@ -33,36 +33,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
-        android:text="@string/main_home_title"
+        android:text="@string/main_home_translate_title"
         android:textColor="@color/auth_text_primary"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/ivBell"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:src="@drawable/ic_home_bell"
         app:layout_constraintBottom_toBottomOf="@id/tvTitle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvTitle" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/contentGuideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.78" />
+        app:layout_constraintTop_toTopOf="@id/tvTitle" />-->
 
     <LinearLayout
         android:id="@+id/cardsContainer"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/contentGuideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle">
@@ -70,9 +62,8 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardScanText"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="18dp"
+            android:layout_height="154dp"
+            android:layout_marginBottom="14dp"
             app:cardBackgroundColor="@color/auth_surface"
             app:cardCornerRadius="22dp"
             app:cardElevation="2dp"
@@ -82,8 +73,14 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="170dp"
                 android:padding="18dp">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/scanImageGuide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.52" />
 
                 <TextView
                     android:id="@+id/tvScanCardTitle"
@@ -93,7 +90,7 @@
                     android:text="@string/main_home_scan_title"
                     android:textColor="@color/auth_text_primary"
                     android:textSize="24sp"
-                    app:layout_constraintEnd_toStartOf="@id/scanIllustration"
+                    app:layout_constraintEnd_toStartOf="@id/scanImageGuide"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -105,19 +102,20 @@
                     android:text="@string/main_home_scan_desc"
                     android:textColor="@color/auth_text_primary"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toStartOf="@id/scanIllustration"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/scanImageGuide"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvScanCardTitle" />
 
                 <ImageView
                     android:id="@+id/scanIllustration"
-                    android:layout_width="140dp"
+                    android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/ic_home_scan_card"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="140:110"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/scanImageGuide"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -125,8 +123,7 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardTranslate"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="154dp"
             app:cardBackgroundColor="@color/auth_surface"
             app:cardCornerRadius="22dp"
             app:cardElevation="2dp"
@@ -136,17 +133,23 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:minHeight="170dp"
                 android:padding="18dp">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/translateImageGuide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.48" />
 
                 <ImageView
                     android:id="@+id/translateIllustration"
-                    android:layout_width="140dp"
+                    android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/ic_home_translate_card"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="140:110"
+                    app:layout_constraintEnd_toStartOf="@id/translateImageGuide"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -159,7 +162,7 @@
                     android:textColor="@color/auth_text_primary"
                     android:textSize="24sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/translateIllustration"
+                    app:layout_constraintStart_toStartOf="@id/translateImageGuide"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -170,6 +173,7 @@
                     android:text="@string/main_home_translate_desc"
                     android:textColor="@color/auth_text_primary"
                     android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tvTranslateTitle"
                     app:layout_constraintTop_toBottomOf="@id/tvTranslateTitle" />

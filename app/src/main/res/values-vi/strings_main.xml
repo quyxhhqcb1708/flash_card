@@ -1,0 +1,27 @@
+<resources>
+    <string name="main_home_title">Quét văn bản</string>
+    <string name="main_home_scan_title">Quét văn bản</string>
+    <string name="main_home_scan_desc">Quét văn bản để dịch nội dung ngay lập tức.</string>
+    <string name="main_home_translate_title">Dịch</string>
+    <string name="main_home_translate_desc">Dịch văn bản nhanh và rõ ràng.</string>
+    <string name="main_nav_card">Luyện tập</string>
+    <string name="main_nav_library">Thư viện</string>
+    <string name="main_nav_user">Tiến độ</string>
+    <string name="main_nav_setting">Cài đặt</string>
+    <string name="main_card_title">Luyện tập</string>
+    <string name="main_card_placeholder">Chưa có flashcard nào được lưu. Hãy lưu từ Quét văn bản hoặc Dịch để chúng xuất hiện ở đây.</string>
+    <string name="main_card_language_pair">%1$s -> %2$s</string>
+    <string name="main_card_saved_at">Đã lưu %1$s</string>
+    <string name="main_card_saved_in">Thư viện: %1$s</string>
+    <string name="main_library_placeholder">Các bộ flashcard của Bạn sẽ xuất hiện ở đây.</string>
+    <string name="main_user_title">Tài khoản</string>
+    <string name="main_user_name">Tên hiển thị</string>
+    <string name="main_user_name_placeholder">Tài khoản của Bạn</string>
+    <string name="main_logout">Đăng xuất</string>
+    <string name="main_delete_account">Xóa tài khoản</string>
+    <string name="main_notification_schedule">Lịch thông báo</string>
+    <string name="main_sound_settings">Cài đặt âm thanh</string>
+    <string name="main_manage_sync">Quản lý đồng bộ dữ liệu</string>
+    <string name="main_coming_soon">Tính năng này đang sẵn sàng cho bước tiếp theo.</string>
+    <string name="main_user_email_placeholder">Chưa liên kết email</string>
+</resources>

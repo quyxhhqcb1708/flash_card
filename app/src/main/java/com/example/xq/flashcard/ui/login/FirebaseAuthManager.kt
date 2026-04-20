@@ -1,8 +1,10 @@
 package com.example.xq.flashcard.ui.login
 
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 
 class FirebaseAuthManager(
+    private val context: Context? = null,
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 ) {
 
@@ -16,7 +18,13 @@ class FirebaseAuthManager(
     ) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError(it.localizedMessage ?: "Đăng nhập thất bại") }
+            .addOnFailureListener {
+                onError(
+                    context?.let { value ->
+                        AuthErrorResolver.resolve(value, it, AuthAction.SIGN_IN)
+                    } ?: it.localizedMessage.orEmpty()
+                )
+            }
     }
 
     fun register(
@@ -27,6 +35,12 @@ class FirebaseAuthManager(
     ) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError(it.localizedMessage ?: "Đăng ký thất bại") }
+            .addOnFailureListener {
+                onError(
+                    context?.let { value ->
+                        AuthErrorResolver.resolve(value, it, AuthAction.REGISTER)
+                    } ?: it.localizedMessage.orEmpty()
+                )
+            }
     }
 }

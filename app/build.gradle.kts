@@ -75,7 +75,10 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:5.0.4")
     implementation("com.google.android.material:material:1.12.0")
-    implementation("com.google.firebase:firebase-auth-ktx:23.2.1")
+    implementation("com.google.guava:guava:33.4.0-android")
+    implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation("com.google.mlkit:text-recognition:16.0.1")
     implementation("com.google.mlkit:translate:17.0.3")

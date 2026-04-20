@@ -65,3 +65,28 @@
   - Added topic-health cards sorted by review pressure and linked them to `LibraryCollectionActivity`.
   - Moved the old profile/logout screen into `UserProfileActivity`, opened from `Setting > User`.
   - Build validation completed with `assembleDebug`.
+
+## Sprint Settings Localization
+
+- Status: Completed
+- Scope: Complete the Setting screen and add full English/Vietnamese app localization with in-app language switching.
+- Progress Notes:
+  - PRD created for settings and localization behavior.
+  - Added `AppLanguageManager` and persisted language selection through shared preferences.
+  - Added `values-vi` resources for the current user-facing app strings.
+  - Rebuilt `SettingFragment` with account access, app language selection, reminder toggle, sound toggle, and data storage summary.
+  - Added localized auth error normalization through `AuthErrorResolver`.
+  - Applied startup locale initialization from `App`.
+  - Build validation completed with `assembleDebug`.
+
+## Sprint Cloud Sync Storage
+
+- Status: Completed
+- Scope: Add Firestore-backed cloud backup and restore for study data, exposed from `Setting > Data Storage`.
+- Progress Notes:
+  - PRD created for cloud sync architecture and user flow.
+  - Added `StudyCloudSyncManager` backed by Firebase Auth + Cloud Firestore.
+  - Extended `FlashCardLibraryStore` with snapshot export/import and user-scoped local storage keys.
+  - Added `Cloud Sync` switch, `Sync Now`, and `Restore From Cloud` actions in `Setting`.
+  - Added login bootstrap restore so a new device can load cloud data before entering the main flow.
+  - Build validation completed with `assembleDebug`.

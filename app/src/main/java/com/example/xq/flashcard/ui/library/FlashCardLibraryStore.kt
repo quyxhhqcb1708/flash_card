@@ -2,7 +2,9 @@ package com.example.xq.flashcard.ui.library
 
 import android.content.Context
 import com.example.xq.flashcard.ui.practice.Sm2Scheduler
+import com.example.xq.flashcard.ui.sync.StudyCloudSyncManager
 import com.example.xq.flashcard.utils.sharedpreference.SharePreferUtils
+import com.google.firebase.auth.FirebaseAuth
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -54,14 +56,25 @@ data class FlashCardPracticeSummary(
     val lastPracticedAt: Long
 )
 
+data class FlashCardLibrarySnapshot(
+    val rawJson: String,
+    val collectionCount: Int,
+    val cardCount: Int,
+    val updatedAt: Long
+) {
+    val hasData: Boolean
+        get() = collectionCount > 0 || cardCount > 0
+}
+
 object FlashCardLibraryStore {
 
-    private const val KEY_FLASHCARD_COLLECTIONS = "flashcard_collections_v1"
+    private const val KEY_FLASHCARD_COLLECTIONS_LEGACY = "flashcard_collections_v1"
+    private const val KEY_FLASHCARD_COLLECTIONS_OWNER_UID = "flashcard_collections_owner_uid"
     private const val MAX_COLLECTION_NAME_LENGTH = 100
 
     fun getCollections(context: Context): List<FlashCardCollection> {
         SharePreferUtils.init(context)
-        val rawValue = SharePreferUtils.getString(KEY_FLASHCARD_COLLECTIONS)
+        val rawValue = readRawCollections(context)
         if (rawValue.isBlank()) return emptyList()
 
         return runCatching {
@@ -74,6 +87,10 @@ object FlashCardLibraryStore {
             }
         }.getOrDefault(emptyList())
             .sortedByDescending { it.updatedAt }
+    }
+
+    fun hasLocalData(context: Context): Boolean {
+        return getCollections(context).isNotEmpty()
     }
 
     fun getCollection(context: Context, collectionId: Long): FlashCardCollection? {
@@ -349,8 +366,48 @@ object FlashCardLibraryStore {
         return Sm2Scheduler.isMastered(card)
     }
 
-    private fun persist(context: Context, collections: List<FlashCardCollection>) {
-        SharePreferUtils.init(context)
+    fun getSnapshot(context: Context): FlashCardLibrarySnapshot {
+        val collections = getCollections(context)
+        return FlashCardLibrarySnapshot(
+            rawJson = readRawCollections(context).ifBlank { "[]" },
+            collectionCount = collections.size,
+            cardCount = collections.sumOf { it.cards.size },
+            updatedAt = collections.maxOfOrNull { collection ->
+                maxOf(
+                    collection.updatedAt,
+                    collection.cards.maxOfOrNull { it.updatedAt } ?: 0L
+                )
+            } ?: 0L
+        )
+    }
+
+    fun exportCollectionsJson(context: Context): String {
+        return readRawCollections(context).ifBlank { "[]" }
+    }
+
+    fun importCollectionsJson(
+        context: Context,
+        rawJson: String,
+        triggerCloudSync: Boolean = false
+    ): Boolean {
+        return runCatching {
+            val jsonArray = JSONArray(rawJson.ifBlank { "[]" })
+            val collections = buildList {
+                for (index in 0 until jsonArray.length()) {
+                    val item = jsonArray.optJSONObject(index) ?: continue
+                    add(item.toCollection())
+                }
+            }
+            persist(context, collections, triggerCloudSync)
+            true
+        }.getOrDefault(false)
+    }
+
+    private fun persist(
+        context: Context,
+        collections: List<FlashCardCollection>,
+        triggerCloudSync: Boolean = true
+    ) {
         val jsonArray = JSONArray()
         collections.forEach { collection ->
             jsonArray.put(
@@ -384,7 +441,7 @@ object FlashCardLibraryStore {
                     })
             )
         }
-        SharePreferUtils.saveKey(KEY_FLASHCARD_COLLECTIONS, jsonArray.toString())
+        persistRawCollections(context, jsonArray.toString(), triggerCloudSync)
     }
 
     private fun JSONObject.toCollection(): FlashCardCollection {
@@ -433,5 +490,53 @@ object FlashCardLibraryStore {
         return value.trim()
             .replace("\\s+".toRegex(), " ")
             .take(MAX_COLLECTION_NAME_LENGTH)
+    }
+
+    private fun readRawCollections(context: Context): String {
+        SharePreferUtils.init(context)
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId.isNullOrBlank()) {
+            return SharePreferUtils.getString(KEY_FLASHCARD_COLLECTIONS_LEGACY)
+        }
+
+        val scopedKey = resolveScopedStorageKey(userId)
+        val scopedValue = SharePreferUtils.getString(scopedKey)
+        if (scopedValue.isNotBlank()) {
+            return scopedValue
+        }
+
+        val legacyValue = SharePreferUtils.getString(KEY_FLASHCARD_COLLECTIONS_LEGACY)
+        val legacyOwnerUserId = SharePreferUtils.getString(KEY_FLASHCARD_COLLECTIONS_OWNER_UID)
+        if (legacyValue.isNotBlank() && (legacyOwnerUserId.isBlank() || legacyOwnerUserId == userId)) {
+            SharePreferUtils.saveKey(scopedKey, legacyValue)
+            SharePreferUtils.saveKey(KEY_FLASHCARD_COLLECTIONS_OWNER_UID, userId)
+            SharePreferUtils.removeKey(KEY_FLASHCARD_COLLECTIONS_LEGACY)
+            return legacyValue
+        }
+        return ""
+    }
+
+    private fun persistRawCollections(
+        context: Context,
+        rawJson: String,
+        triggerCloudSync: Boolean
+    ) {
+        SharePreferUtils.init(context)
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId.isNullOrBlank()) {
+            SharePreferUtils.saveKey(KEY_FLASHCARD_COLLECTIONS_LEGACY, rawJson)
+        } else {
+            SharePreferUtils.saveKey(resolveScopedStorageKey(userId), rawJson)
+            SharePreferUtils.saveKey(KEY_FLASHCARD_COLLECTIONS_OWNER_UID, userId)
+            SharePreferUtils.removeKey(KEY_FLASHCARD_COLLECTIONS_LEGACY)
+        }
+
+        if (triggerCloudSync) {
+            StudyCloudSyncManager.syncLocalSnapshotInBackground(context)
+        }
+    }
+
+    private fun resolveScopedStorageKey(userId: String): String {
+        return "${KEY_FLASHCARD_COLLECTIONS_LEGACY}_$userId"
     }
 }

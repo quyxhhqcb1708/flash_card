@@ -19,7 +19,7 @@ class UserProfileActivity : BaseActivity<ActivityUserProfileBinding>() {
         }
     }
 
-    private val authService = AuthService()
+    private val authService by lazy { AuthService(this) }
 
     override fun inflateViewBinding(layoutInflater: android.view.LayoutInflater): ActivityUserProfileBinding {
         return ActivityUserProfileBinding.inflate(layoutInflater)

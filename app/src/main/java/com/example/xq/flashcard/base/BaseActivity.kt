@@ -16,6 +16,7 @@ import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
+import com.example.xq.flashcard.utils.locale.AppLanguageManager
 import com.example.xq.flashcard.utils.sharedpreference.SharePreferUtils
 import java.util.Locale
 
@@ -30,15 +31,9 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     private fun updateBaseContextLocale(context: Context): Context {
         val locale: Locale
         SharePreferUtils.init(context)
-        val keyLang = SharePreferUtils.getLanguageCode(context)
-        val langDev = Resources.getSystem().configuration.locale.language.toString()
-        if (keyLang == "") {
-            locale = Locale(langDev)
-            Locale.setDefault(locale)
-        } else {
-            locale = Locale(keyLang)
-            Locale.setDefault(locale)
-        }
+        val keyLang = AppLanguageManager.resolveStoredOrSystemLanguage(context)
+        locale = Locale(keyLang)
+        Locale.setDefault(locale)
         val configuration = context.resources.configuration
         configuration.setLocale(locale)
         return context.createConfigurationContext(configuration)

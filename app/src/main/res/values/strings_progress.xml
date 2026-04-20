@@ -17,7 +17,7 @@
     <string name="progress_topics_title">Topic Health</string>
     <string name="progress_topics_subtitle">Topics with the highest review pressure appear first. Tap a topic to open its full library detail.</string>
     <string name="progress_no_topics">No topics yet. Save words from Scan Text or Translate to start building progress data.</string>
-    <string name="progress_collection_meta">%1$d cards • %2$d practiced</string>
+    <string name="progress_collection_meta">%1$d cards / %2$d practiced</string>
     <string name="progress_collection_due">%1$d due today</string>
     <string name="progress_collection_learning">%1$d building</string>
     <string name="progress_collection_upcoming">%1$d scheduled</string>

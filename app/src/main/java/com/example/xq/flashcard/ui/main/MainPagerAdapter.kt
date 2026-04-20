@@ -2,7 +2,7 @@ package com.example.xq.flashcard.ui.main
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.xq.flashcard.ui.MainActivity
+import com.example.xq.flashcard.ui.main.MainActivity
 import com.example.xq.flashcard.ui.main.fragments.LibraryFragment
 import com.example.xq.flashcard.ui.main.fragments.PracticeFragment
 import com.example.xq.flashcard.ui.main.fragments.ProgressFragment

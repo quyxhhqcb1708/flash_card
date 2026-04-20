@@ -2,7 +2,6 @@ package com.example.xq.flashcard.utils.sharedpreference
 
 import android.content.Context
 import android.content.SharedPreferences
-import java.util.stream.LongStream.Builder
 
 object SharePreferUtils {
 
@@ -24,7 +23,10 @@ object SharePreferUtils {
             is Long -> sharePref.edit().putLong(key, value).apply()
             is Float -> sharePref.edit().putFloat(key, value).apply()
         }
+    }
 
+    fun removeKey(key: String) {
+        sharePref.edit().remove(key).apply()
     }
 
     fun getString(key: String, value: String = ""): String {
@@ -39,8 +41,8 @@ object SharePreferUtils {
         return sharePref.getBoolean(key, defaultValue)
     }
 
-    fun getLong(key: String): Long {
-        return sharePref.getLong(key, 0L)
+    fun getLong(key: String, defaultValue: Long = 0L): Long {
+        return sharePref.getLong(key, defaultValue)
     }
 
     fun getFloat(key: String, defaultValue: Float = 0f): Float {
@@ -57,6 +59,10 @@ object SharePreferUtils {
     }
 
     //=====================================   APP   ==============================================
+    fun isNotificationEnabled(): Boolean = getBoolean("setting_notifications_enabled", true)
+    fun setNotificationEnabled(value: Boolean) = saveKey("setting_notifications_enabled", value)
 
+    fun isSoundEnabled(): Boolean = getBoolean("setting_sound_enabled", true)
+    fun setSoundEnabled(value: Boolean) = saveKey("setting_sound_enabled", value)
 
 }
