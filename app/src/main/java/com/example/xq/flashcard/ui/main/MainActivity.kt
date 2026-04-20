@@ -1,19 +1,19 @@
 package com.example.xq.flashcard.ui.main
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.xq.flashcard.R
+import com.example.xq.flashcard.base.BaseActivity
 import com.example.xq.flashcard.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), MainNavigationHost {
+class MainActivity : BaseActivity<ActivityMainBinding>(), MainNavigationHost {
 
-    private lateinit var binding: ActivityMainBinding
+    override fun inflateViewBinding(layoutInflater: android.view.LayoutInflater): ActivityMainBinding {
+        return ActivityMainBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         setupViewPager()
         setupBottomNavigation()
         openScanText()

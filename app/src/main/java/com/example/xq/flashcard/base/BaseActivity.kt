@@ -1,9 +1,6 @@
 package com.example.xq.flashcard.base
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.content.res.Resources
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +11,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.example.xq.flashcard.utils.locale.AppLanguageManager
@@ -39,9 +37,14 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         return context.createConfigurationContext(configuration)
     }
 
-    companion object {
-        const val ACTION_NETWORK_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE"
-    }
+    /*
+     * Legacy network hook is intentionally disabled.
+     * App now supports offline learning flows, so BaseActivity only keeps
+     * shared immersive UI + common keyboard/locale behavior.
+     */
+    // companion object {
+    //     const val ACTION_NETWORK_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE"
+    // }
 
     lateinit var binding: VB
 
@@ -49,6 +52,7 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         fullStatusBar()
         super.onCreate(savedInstanceState)
         binding = inflateViewBinding(layoutInflater)
+        enableEdgeToEdge()
         setContentView(binding.root)
         hideNavigationBar()
         val callback = object : OnBackPressedCallback(true) {
@@ -62,11 +66,6 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     open fun onBack() {
         finish()
     }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
 
     abstract fun inflateViewBinding(layoutInflater: LayoutInflater): VB
 
@@ -108,11 +107,15 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         }
     }
 
-    fun gotoAndClear(pClass: Class<out Activity>) {
-        val intent = Intent(this, pClass)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        startActivity(intent)
-        finish()
-    }
+    /*
+     * Legacy navigation helper from older module-based flows.
+     * Disabled to keep BaseActivity focused on reusable system UI behavior.
+     */
+    // fun gotoAndClear(pClass: Class<out Activity>) {
+    //     val intent = Intent(this, pClass)
+    //     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+    //     startActivity(intent)
+    //     finish()
+    // }
 
 }
