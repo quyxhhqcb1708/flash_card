@@ -11,8 +11,8 @@ import com.example.xq.flashcard.databinding.FragmentSettingBinding
 import com.example.xq.flashcard.ui.library.FlashCardLibraryStore
 import com.example.xq.flashcard.ui.settings.AppSettingsStore
 import com.example.xq.flashcard.ui.settings.UserProfileActivity
-import com.example.xq.flashcard.ui.sync.CloudSyncEnableMode
-import com.example.xq.flashcard.ui.sync.StudyCloudSyncManager
+import com.example.xq.flashcard.sync.CloudSyncEnableMode
+import com.example.xq.flashcard.sync.StudyCloudSyncManager
 import com.example.xq.flashcard.utils.locale.AppLanguageManager
 import com.example.xq.flashcard.utils.locale.AppLanguageOption
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

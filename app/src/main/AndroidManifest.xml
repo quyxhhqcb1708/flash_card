@@ -35,7 +35,7 @@
             android:name=".ui.library.SaveToFlashcardActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.translate.TranslateActivity"
+            android:name=".translate.TranslateActivity"
             android:exported="false" />
         <activity
             android:name=".ui.scan.ScanCameraActivity"

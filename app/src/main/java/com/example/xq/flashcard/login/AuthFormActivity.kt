@@ -12,7 +12,7 @@ import com.example.xq.flashcard.R
 import com.example.xq.flashcard.base.BaseActivity
 import com.example.xq.flashcard.databinding.LayoutAuthFormBinding
 import com.example.xq.flashcard.ui.main.MainActivity
-import com.example.xq.flashcard.ui.sync.StudyCloudSyncManager
+import com.example.xq.flashcard.sync.StudyCloudSyncManager
 
 abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
 

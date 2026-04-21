@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.example.xq.flashcard.base.BaseFragment
 import com.example.xq.flashcard.databinding.FragmentScanTextBinding
 import com.example.xq.flashcard.ui.scan.ScanCameraActivity
-import com.example.xq.flashcard.ui.translate.TranslateActivity
+import com.example.xq.flashcard.translate.TranslateActivity
 
 class ScanTextFragment : BaseFragment<FragmentScanTextBinding>() {
     override fun inflateLayout(

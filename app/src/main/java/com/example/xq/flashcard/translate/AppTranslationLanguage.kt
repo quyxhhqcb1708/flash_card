@@ -1,4 +1,4 @@
-package com.example.xq.flashcard.ui.translate
+package com.example.xq.flashcard.translate
 
 import androidx.annotation.StringRes
 import com.example.xq.flashcard.R

@@ -2,7 +2,7 @@ package com.example.xq.flashcard.ui.library
 
 import android.content.Context
 import com.example.xq.flashcard.ui.practice.Sm2Scheduler
-import com.example.xq.flashcard.ui.sync.StudyCloudSyncManager
+import com.example.xq.flashcard.sync.StudyCloudSyncManager
 import com.example.xq.flashcard.utils.sharedpreference.SharePreferUtils
 import com.google.firebase.auth.FirebaseAuth
 import org.json.JSONArray

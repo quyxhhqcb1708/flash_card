@@ -21,8 +21,8 @@ import com.example.xq.flashcard.base.BaseActivity
 import com.example.xq.flashcard.databinding.ActivityScanCameraBinding
 import com.example.xq.flashcard.ui.library.CreateCollectionActivity
 import com.example.xq.flashcard.ui.library.SaveToFlashcardActivity
-import com.example.xq.flashcard.ui.translate.AppTranslationLanguage
-import com.example.xq.flashcard.ui.translate.TranslationManager
+import com.example.xq.flashcard.translate.AppTranslationLanguage
+import com.example.xq.flashcard.translate.TranslationManager
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

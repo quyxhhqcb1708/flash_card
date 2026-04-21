@@ -116,9 +116,14 @@
                     android:backgroundTint="@null"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingHorizontal="6dp"
                     android:text="@string/library_difficulty_easy"
                     android:textAllCaps="false"
                     android:textColor="@color/auth_text_secondary"
+                    android:textSize="14sp"
                     app:backgroundTint="@null"
                     app:strokeWidth="0dp" />
 
@@ -132,9 +137,14 @@
                     android:backgroundTint="@null"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingHorizontal="6dp"
                     android:text="@string/library_difficulty_medium"
                     android:textAllCaps="false"
                     android:textColor="@color/practice_medium_text"
+                    android:textSize="14sp"
                     app:backgroundTint="@null"
                     app:strokeWidth="0dp" />
 
@@ -148,9 +158,14 @@
                     android:backgroundTint="@null"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingHorizontal="6dp"
                     android:text="@string/library_difficulty_hard"
                     android:textAllCaps="false"
                     android:textColor="@color/auth_text_secondary"
+                    android:textSize="14sp"
                     app:backgroundTint="@null"
                     app:strokeWidth="0dp" />
             </LinearLayout>

@@ -1,11 +1,11 @@
-package com.example.xq.flashcard.ui.translate
+package com.example.xq.flashcard.translate
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
@@ -39,7 +39,7 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
 
     private val saveFlashcardLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == android.app.Activity.RESULT_OK) {
+            if (result.resultCode == RESULT_OK) {
                 result.data?.getStringExtra(CreateCollectionActivity.EXTRA_RESULT_MESSAGE)?.let {
                     Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
                 }
@@ -77,7 +77,7 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
         )
     }
 
-    override fun inflateViewBinding(layoutInflater: android.view.LayoutInflater): ActivityTranslateBinding {
+    override fun inflateViewBinding(layoutInflater: LayoutInflater): ActivityTranslateBinding {
         return ActivityTranslateBinding.inflate(layoutInflater)
     }
 
@@ -217,7 +217,7 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
             Toast.makeText(this, R.string.scan_input_empty, Toast.LENGTH_SHORT).show()
             return
         }
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.setPrimaryClip(ClipData.newPlainText("translation", binding.tvResult.text))
         Toast.makeText(this, R.string.scan_copy_done, Toast.LENGTH_SHORT).show()
     }

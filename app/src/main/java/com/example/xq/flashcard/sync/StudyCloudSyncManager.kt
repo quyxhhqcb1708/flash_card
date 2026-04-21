@@ -1,4 +1,4 @@
-package com.example.xq.flashcard.ui.sync
+package com.example.xq.flashcard.sync
 
 import android.content.Context
 import com.example.xq.flashcard.ui.library.FlashCardLibraryStore

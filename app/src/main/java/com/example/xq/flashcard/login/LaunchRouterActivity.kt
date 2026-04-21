@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.example.xq.flashcard.base.BaseActivity
 import com.example.xq.flashcard.databinding.ActivityLaunchRouterBinding
 import com.example.xq.flashcard.ui.main.MainActivity
-import com.example.xq.flashcard.ui.sync.StudyCloudSyncManager
+import com.example.xq.flashcard.sync.StudyCloudSyncManager
 import com.google.firebase.auth.FirebaseAuth
 
 class LaunchRouterActivity : BaseActivity<ActivityLaunchRouterBinding>() {
