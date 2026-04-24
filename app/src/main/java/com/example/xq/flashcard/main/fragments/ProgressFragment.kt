@@ -40,6 +40,9 @@ class ProgressFragment : BaseFragment<FragmentProgressBinding>() {
         binding.tvAccuracyValue.text = ProgressUiFormatter.formatPercent(dashboard.averageAccuracyRate)
         binding.tvCollectionsValue.text = dashboard.totalCollections.toString()
         binding.tvPracticedValue.text = dashboard.practicedCount.toString()
+        binding.tvStreakValue.text = ProgressUiFormatter.formatStreakDays(dashboard.studyStreakDays)
+        binding.tvStreakUnit.text = getString(R.string.progress_streak_days)
+        binding.tvStreakMessage.text = ProgressUiFormatter.buildStreakMessage(context, dashboard)
         binding.tvFocusMessage.text = ProgressUiFormatter.buildFocusMessage(context, dashboard)
 
         binding.progressChart.setEntries(

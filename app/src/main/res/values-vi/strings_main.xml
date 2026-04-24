@@ -10,13 +10,13 @@
     <string name="main_nav_setting">Cài đặt</string>
     <string name="main_card_title">Luyện tập</string>
     <string name="main_card_placeholder">Chưa có flashcard nào được lưu. Hãy lưu từ Quét văn bản hoặc Dịch để chúng xuất hiện ở đây.</string>
-    <string name="main_card_language_pair">%1$s -> %2$s</string>
+    <string name="main_card_language_pair">%1$s -&gt; %2$s</string>
     <string name="main_card_saved_at">Đã lưu %1$s</string>
     <string name="main_card_saved_in">Thư viện: %1$s</string>
-    <string name="main_library_placeholder">Các bộ flashcard của Bạn sẽ xuất hiện ở đây.</string>
+    <string name="main_library_placeholder">Các bộ flashcard của bạn sẽ xuất hiện ở đây.</string>
     <string name="main_user_title">Tài khoản</string>
     <string name="main_user_name">Tên hiển thị</string>
-    <string name="main_user_name_placeholder">Tài khoản của Bạn</string>
+    <string name="main_user_name_placeholder">Tài khoản của bạn</string>
     <string name="main_logout">Đăng xuất</string>
     <string name="main_delete_account">Xóa tài khoản</string>
     <string name="main_notification_schedule">Lịch thông báo</string>

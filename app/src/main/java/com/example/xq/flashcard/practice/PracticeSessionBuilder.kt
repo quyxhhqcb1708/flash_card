@@ -60,6 +60,7 @@ object PracticeSessionBuilder {
                 cardId = chosen.card.id,
                 collectionName = chosen.collectionName,
                 prompt = chosen.card.term,
+                promptLanguageCode = chosen.card.sourceLanguageCode,
                 correctAnswer = chosen.card.definition,
                 secondaryText = chosen.card.definition,
                 languagePair = FlashCardDisplayFormatter.getLanguagePair(context, chosen.card),

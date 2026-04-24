@@ -128,24 +128,53 @@ class SaveToFlashcardActivity : BaseActivity<ActivitySaveToFlashcardBinding>() {
     private fun bindCollections() {
         binding.collectionsContainer.removeAllViews()
         FlashCardLibraryStore.getCollections(this).forEach { collection ->
-            val itemBinding = ItemSaveTargetCollectionBinding.inflate(layoutInflater, binding.collectionsContainer, false)
+            val itemBinding = ItemSaveTargetCollectionBinding.inflate(
+                layoutInflater,
+                binding.collectionsContainer,
+                false
+            )
+            val normalizedDefinition = definition.ifBlank { term }
+            val hasDuplicate = FlashCardLibraryStore.hasDuplicateCard(
+                context = this,
+                collectionId = collection.id,
+                term = term,
+                definition = normalizedDefinition
+            )
             itemBinding.coverFrame.setBackgroundResource(
                 LibraryUiHelper.getCoverBackgroundRes(collection.id, collection.name)
             )
             itemBinding.tvCollectionInitial.text = LibraryUiHelper.getCollectionInitial(collection.name)
             itemBinding.tvCollectionName.text = collection.name
+            itemBinding.tvCollectionStatus.text = if (hasDuplicate) {
+                getString(R.string.library_save_duplicate_badge)
+            } else {
+                getString(R.string.library_count_label, collection.cards.size)
+            }
+            itemBinding.root.alpha = if (hasDuplicate) 0.72f else 1f
             itemBinding.root.setOnClickListener {
+                if (hasDuplicate) {
+                    Toast.makeText(
+                        this,
+                        getString(R.string.library_save_duplicate, collection.name),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
                 val result = FlashCardLibraryStore.saveCard(
                     context = this,
                     collectionId = collection.id,
                     term = term,
-                    definition = definition.ifBlank { term },
+                    definition = normalizedDefinition,
                     sourceLanguageCode = sourceLanguageCode,
                     targetLanguageCode = targetLanguageCode,
                     manualDifficulty = selectedDifficulty
                 )
                 if (result == null) {
-                    Toast.makeText(this, R.string.scan_translation_error, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.library_save_duplicate, collection.name),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
                 }
                 setResult(

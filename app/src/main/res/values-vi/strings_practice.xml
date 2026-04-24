@@ -33,7 +33,7 @@
     <string name="practice_correct_answer">Đáp án đúng: %1$s</string>
     <string name="practice_progress">%1$d / %2$d</string>
     <string name="practice_complete_title">Hoàn thành ôn tập</string>
-    <string name="practice_complete_subtitle">Lịch SM-2 của Bạn đã được cập nhật cho buổi học tiếp theo.</string>
+    <string name="practice_complete_subtitle">Lịch SM-2 của bạn đã được cập nhật cho buổi học tiếp theo.</string>
     <string name="practice_complete_reviewed">%1$d đã ôn</string>
     <string name="practice_complete_correct">%1$d đúng</string>
     <string name="practice_complete_wrong">%1$d sai</string>

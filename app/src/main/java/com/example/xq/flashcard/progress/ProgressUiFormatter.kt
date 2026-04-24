@@ -10,6 +10,10 @@ object ProgressUiFormatter {
         return "${(rate.coerceIn(0f, 1f) * 100f).roundToInt()}%"
     }
 
+    fun formatStreakDays(days: Int): String {
+        return "$days"
+    }
+
     fun buildFocusMessage(
         context: Context,
         dashboard: LearningProgressDashboard
@@ -17,6 +21,13 @@ object ProgressUiFormatter {
         return when {
             dashboard.totalSavedCount == 0 -> {
                 context.getString(R.string.progress_focus_empty)
+            }
+
+            !dashboard.studiedToday && dashboard.studyStreakDays > 0 -> {
+                context.getString(
+                    R.string.progress_focus_streak,
+                    dashboard.studyStreakDays
+                )
             }
 
             dashboard.dueTodayCount > 0 -> {
@@ -54,5 +65,30 @@ object ProgressUiFormatter {
             dashboard.distribution.upcomingCount,
             dashboard.distribution.stableCount
         )
+    }
+
+    fun buildStreakMessage(
+        context: Context,
+        dashboard: LearningProgressDashboard
+    ): String {
+        return when {
+            dashboard.studiedToday && dashboard.studyStreakDays > 0 -> {
+                context.getString(
+                    R.string.progress_streak_message_done,
+                    dashboard.studyStreakDays
+                )
+            }
+
+            dashboard.studyStreakDays > 0 -> {
+                context.getString(
+                    R.string.progress_streak_message_continue,
+                    dashboard.studyStreakDays
+                )
+            }
+
+            else -> {
+                context.getString(R.string.progress_streak_message_start)
+            }
+        }
     }
 }

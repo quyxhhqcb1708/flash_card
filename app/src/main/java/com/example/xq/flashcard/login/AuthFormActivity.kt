@@ -29,7 +29,9 @@ abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
         primaryButtonClick: () -> Unit,
         switchClick: () -> Unit,
         googleClick: (() -> Unit)? = null,
-        showGoogle: Boolean = isLogin
+        showGoogle: Boolean = isLogin,
+        guestActionClick: (() -> Unit)? = null,
+        showGuestAction: Boolean = false
     ) {
         formBinding.tvTitle.text = title
         formBinding.tvSubtitle.text = subtitle
@@ -38,8 +40,12 @@ abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
         formBinding.tvSwitchAction.text = switchAction
         formBinding.tvForgotPassword.isVisible = isLogin
         formBinding.tvGoogleButton.text = getString(R.string.auth_google_cta)
+        formBinding.tvGuestHint.text = getString(R.string.auth_guest_mode_hint)
+        formBinding.btnGuestMode.text = getString(R.string.auth_continue_as_guest)
         formBinding.googleContainer.isVisible = showGoogle
         formBinding.dividerContainer.isVisible = showGoogle
+        formBinding.tvGuestHint.isVisible = showGuestAction
+        formBinding.btnGuestMode.isVisible = showGuestAction
         formBinding.btnPrimary.setOnClickListener { primaryButtonClick() }
         formBinding.llSwitchAccount.setOnClickListener { switchClick() }
         formBinding.googleContainer.setOnClickListener {
@@ -48,6 +54,9 @@ abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
             } else {
                 Toast.makeText(this, R.string.auth_google_placeholder, Toast.LENGTH_SHORT).show()
             }
+        }
+        formBinding.btnGuestMode.setOnClickListener {
+            guestActionClick?.invoke()
         }
 
         attachFieldState(
@@ -139,6 +148,8 @@ abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
         formBinding.etPassword.isEnabled = !isLoading
         formBinding.ivTogglePassword.isEnabled = !isLoading
         formBinding.googleContainer.isEnabled = !isLoading
+        formBinding.btnGuestMode.isEnabled = !isLoading
+        formBinding.llSwitchAccount.isEnabled = !isLoading
         if (formBinding.confirmPasswordContainer.isVisible) {
             formBinding.etConfirmPassword.isEnabled = !isLoading
             formBinding.ivToggleConfirmPassword.isEnabled = !isLoading
@@ -156,10 +167,17 @@ abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
     }
 
     protected fun navigateToMain() {
+        GuestSessionStore.clear(this)
         StudyCloudSyncManager.bootstrapAfterLogin(this) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
+    }
+
+    protected fun navigateToMainAsGuest() {
+        GuestSessionStore.setGuestMode(this, true)
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     protected fun gotoRegister() {
@@ -167,7 +185,7 @@ abstract class AuthFormActivity<VB : ViewBinding> : BaseActivity<VB>() {
     }
 
     protected fun gotoLogin() {
-        startActivity(Intent(this, LoginActivity::class.java))
+        startActivity(LoginActivity.createIntent(this))
         finish()
     }
 

@@ -13,6 +13,7 @@ import androidx.core.widget.doAfterTextChanged
 import com.example.xq.flashcard.R
 import com.example.xq.flashcard.base.BaseActivity
 import com.example.xq.flashcard.databinding.ActivityTranslateBinding
+import com.example.xq.flashcard.speech.EnglishTextSpeaker
 import com.example.xq.flashcard.ui.library.CreateCollectionActivity
 import com.example.xq.flashcard.ui.library.SaveToFlashcardActivity
 import com.example.xq.flashcard.ui.scan.ImageBitmapLoader
@@ -31,6 +32,7 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
     private val recognitionCoordinator = TextRecognitionCoordinator()
     private val handler = Handler(Looper.getMainLooper())
 
+    private lateinit var englishTextSpeaker: EnglishTextSpeaker
     private var pendingTranslate: Runnable? = null
     private var sourceLanguage = AppTranslationLanguage.ENGLISH
     private var targetLanguage = AppTranslationLanguage.VIETNAMESE
@@ -83,6 +85,7 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        englishTextSpeaker = EnglishTextSpeaker(this)
         resolveInitialLanguages()
         setupUi()
         consumeIncomingPayload()
@@ -90,6 +93,9 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
 
     override fun onDestroy() {
         cancelPendingTranslation()
+        if (::englishTextSpeaker.isInitialized) {
+            englishTextSpeaker.release()
+        }
         translationManager.close()
         recognitionCoordinator.close()
         super.onDestroy()
@@ -101,12 +107,18 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
             setSourceText("", triggerTranslate = false)
             showPlaceholderResult()
         }
+        binding.btnSpeakSource.setOnClickListener {
+            speakEnglishText(binding.etSource.text?.toString().orEmpty())
+        }
         binding.btnPickImage.setOnClickListener { pickImageLauncher.launch("image/*") }
         binding.btnSwapLanguage.setOnClickListener { swapLanguages() }
         binding.btnFlashCard.setOnClickListener {
             saveCurrentFlashcard()
         }
         binding.btnCopyResult.setOnClickListener { copyResultToClipboard() }
+        binding.btnSpeakResult.setOnClickListener {
+            speakEnglishText(binding.tvResult.text?.toString().orEmpty())
+        }
         binding.etSource.doAfterTextChanged { editable ->
             if (internalTextChange) return@doAfterTextChanged
             scheduleTranslation(editable?.toString().orEmpty())
@@ -176,18 +188,21 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
         } else {
             cancelPendingTranslation()
         }
+        updateSpeakButtons()
     }
 
     private fun setResultText(text: String) {
         hasTranslationResult = true
         binding.tvResult.text = text
         binding.tvResult.setTextColor(getColor(R.color.auth_text_primary))
+        updateSpeakButtons()
     }
 
     private fun showPlaceholderResult() {
         hasTranslationResult = false
         binding.tvResult.text = getString(R.string.scan_result_hint)
         binding.tvResult.setTextColor(getColor(R.color.auth_text_hint))
+        updateSpeakButtons()
     }
 
     private fun swapLanguages() {
@@ -200,6 +215,7 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
         } else {
             binding.etSource.text?.toString().orEmpty()
         }
+        showPlaceholderResult()
         setSourceText(newSource, triggerTranslate = true)
     }
 
@@ -210,6 +226,7 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
         binding.chipTargetLanguage.setBackgroundResource(R.drawable.bg_scan_chip_selected)
         binding.chipSourceLanguage.setTextColor(getColor(R.color.auth_surface))
         binding.chipTargetLanguage.setTextColor(getColor(R.color.auth_surface))
+        updateSpeakButtons()
     }
 
     private fun copyResultToClipboard() {
@@ -243,5 +260,30 @@ class TranslateActivity : BaseActivity<ActivityTranslateBinding>() {
     private fun cancelPendingTranslation() {
         pendingTranslate?.let { handler.removeCallbacks(it) }
         pendingTranslate = null
+    }
+
+    private fun updateSpeakButtons() {
+        setSpeakButtonEnabled(
+            binding.btnSpeakSource,
+            sourceLanguage == AppTranslationLanguage.ENGLISH &&
+                binding.etSource.text?.toString().orEmpty().isNotBlank()
+        )
+        setSpeakButtonEnabled(
+            binding.btnSpeakResult,
+            targetLanguage == AppTranslationLanguage.ENGLISH &&
+                hasTranslationResult &&
+                binding.tvResult.text?.toString().orEmpty().isNotBlank()
+        )
+    }
+
+    private fun setSpeakButtonEnabled(button: android.view.View, isEnabled: Boolean) {
+        button.isEnabled = isEnabled
+        button.alpha = if (isEnabled) 1f else 0.4f
+    }
+
+    private fun speakEnglishText(text: String) {
+        if (!englishTextSpeaker.speak(text)) {
+            Toast.makeText(this, R.string.speech_not_available, Toast.LENGTH_SHORT).show()
+        }
     }
 }

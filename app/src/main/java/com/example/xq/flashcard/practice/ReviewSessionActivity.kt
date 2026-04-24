@@ -11,6 +11,8 @@ import androidx.core.view.isVisible
 import com.example.xq.flashcard.R
 import com.example.xq.flashcard.base.BaseActivity
 import com.example.xq.flashcard.databinding.ActivityReviewSessionBinding
+import com.example.xq.flashcard.speech.EnglishTextSpeaker
+import com.example.xq.flashcard.translate.AppTranslationLanguage
 import com.example.xq.flashcard.ui.library.FlashCardLibraryStore
 import com.google.android.material.button.MaterialButton
 import java.io.Serializable
@@ -58,6 +60,8 @@ class ReviewSessionActivity : BaseActivity<ActivityReviewSessionBinding>() {
         listOf(binding.btnOption1, binding.btnOption2, binding.btnOption3, binding.btnOption4)
     }
 
+    private lateinit var answerSoundPlayer: PracticeAnswerSoundPlayer
+    private lateinit var englishTextSpeaker: EnglishTextSpeaker
     private var questions: List<PracticeQuestion> = emptyList()
     private var currentIndex: Int = 0
     private var selectedAnswer: String? = null
@@ -72,9 +76,21 @@ class ReviewSessionActivity : BaseActivity<ActivityReviewSessionBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        answerSoundPlayer = PracticeAnswerSoundPlayer(this)
+        englishTextSpeaker = EnglishTextSpeaker(this)
         restoreState(savedInstanceState)
         setupUi()
         bindSession()
+    }
+
+    override fun onDestroy() {
+        if (::answerSoundPlayer.isInitialized) {
+            answerSoundPlayer.release()
+        }
+        if (::englishTextSpeaker.isInitialized) {
+            englishTextSpeaker.release()
+        }
+        super.onDestroy()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -110,6 +126,7 @@ class ReviewSessionActivity : BaseActivity<ActivityReviewSessionBinding>() {
         binding.btnBack.setOnClickListener { finishWithRefresh() }
         binding.btnDone.setOnClickListener { finishWithRefresh() }
         binding.btnContinue.setOnClickListener { moveToNextQuestion() }
+        binding.btnSpeakPrompt.setOnClickListener { speakCurrentPrompt() }
         optionButtons.forEach { button ->
             button.setOnClickListener {
                 handleOptionSelected(button.text?.toString().orEmpty())
@@ -163,6 +180,7 @@ class ReviewSessionActivity : BaseActivity<ActivityReviewSessionBinding>() {
         binding.tvCollectionName.text = question.collectionName
         binding.tvPrompt.text = question.prompt
         binding.tvLanguagePair.text = question.languagePair
+        updatePromptSpeaker(question)
         binding.tvFeedback.isVisible = false
         binding.tvCorrectAnswer.isVisible = false
         binding.btnContinue.isEnabled = hasAnswered
@@ -203,6 +221,7 @@ class ReviewSessionActivity : BaseActivity<ActivityReviewSessionBinding>() {
             wrongCount += 1
         }
 
+        answerSoundPlayer.playAnswerFeedback(isCorrect)
         renderAnsweredState(question)
     }
 
@@ -302,6 +321,20 @@ class ReviewSessionActivity : BaseActivity<ActivityReviewSessionBinding>() {
     private fun finishWithRefresh() {
         setResult(Activity.RESULT_OK)
         finish()
+    }
+
+    private fun updatePromptSpeaker(question: PracticeQuestion) {
+        val canSpeakPrompt = question.promptLanguageCode == AppTranslationLanguage.ENGLISH.mlKitCode &&
+            question.prompt.isNotBlank()
+        binding.btnSpeakPrompt.isVisible = canSpeakPrompt
+        binding.btnSpeakPrompt.isEnabled = canSpeakPrompt
+    }
+
+    private fun speakCurrentPrompt() {
+        val question = questions.getOrNull(currentIndex) ?: return
+        if (!englishTextSpeaker.speak(question.prompt)) {
+            Toast.makeText(this, R.string.speech_not_available, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private enum class OptionState {

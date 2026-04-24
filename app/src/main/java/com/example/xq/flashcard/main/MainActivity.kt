@@ -1,5 +1,7 @@
 package com.example.xq.flashcard.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
 import com.example.xq.flashcard.R
@@ -7,6 +9,18 @@ import com.example.xq.flashcard.base.BaseActivity
 import com.example.xq.flashcard.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity<ActivityMainBinding>(), MainNavigationHost {
+
+    companion object {
+        private const val EXTRA_START_TAB = "extra_start_tab"
+        private const val TAB_PRACTICE = "tab_practice"
+
+        fun createPracticeIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java).apply {
+                putExtra(EXTRA_START_TAB, TAB_PRACTICE)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            }
+        }
+    }
 
     override fun inflateViewBinding(layoutInflater: android.view.LayoutInflater): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
@@ -16,7 +30,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), MainNavigationHost {
         super.onCreate(savedInstanceState)
         setupViewPager()
         setupBottomNavigation()
-        openScanText()
+        handleStartDestination(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleStartDestination(intent)
     }
 
     private fun setupViewPager() {
@@ -57,6 +77,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), MainNavigationHost {
 
     override fun openSetting() {
         binding.viewPager.currentItem = 4
+    }
+
+    private fun handleStartDestination(intent: Intent?) {
+        when (intent?.getStringExtra(EXTRA_START_TAB)) {
+            TAB_PRACTICE -> openPractice()
+            else -> openScanText()
+        }
     }
 
     private fun updateBottomBar(position: Int) {

@@ -26,4 +26,11 @@
     <string name="auth_forgot_password_placeholder">Forgot password will be connected later.</string>
     <string name="auth_register_success">Account created successfully.</string>
     <string name="auth_main_placeholder">Signed in successfully. This screen is ready for the home flow.</string>
+    <string name="auth_continue_as_guest">Use without signing in</string>
+    <string name="auth_guest_mode_hint">You can use the app locally without an account. Sign in anytime to enable cloud sync.</string>
+    <string name="auth_guest_name">Guest mode</string>
+    <string name="auth_guest_email_placeholder">Not signed in yet</string>
+    <string name="auth_sign_in_to_sync">Sign in to sync data</string>
+    <string name="speech_listen_english">Listen to English</string>
+    <string name="speech_not_available">English voice is unavailable on this device.</string>
 </resources>

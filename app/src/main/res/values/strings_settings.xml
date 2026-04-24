@@ -10,8 +10,9 @@
     <string name="setting_language_option_english">English</string>
     <string name="setting_language_option_vietnamese">Tiếng Việt</string>
     <string name="setting_notifications_title">Study Reminders</string>
-    <string name="setting_notifications_enabled">Review reminders are enabled on this device.</string>
+    <string name="setting_notifications_enabled">Review reminders run at 12:00 PM and 9:00 PM when you have not practiced yet.</string>
     <string name="setting_notifications_disabled">Review reminders are turned off on this device.</string>
+    <string name="setting_notifications_permission_denied">Notification permission is required to turn on study reminders.</string>
     <string name="setting_sound_title">Sound Feedback</string>
     <string name="setting_sound_enabled">Practice sound feedback is enabled.</string>
     <string name="setting_sound_disabled">Practice sound feedback is muted.</string>
@@ -42,4 +43,10 @@
     <string name="setting_storage_caption_last_sync">Last cloud sync: %1$s</string>
     <string name="setting_storage_dialog_title">Study Data Storage</string>
     <string name="setting_storage_dialog_message">All flashcards and SRS progress are stored locally on this device.\n\nTopics: %1$d\nWords: %2$d\nCloud Sync: %3$s</string>
+    <string name="study_reminder_channel_name">Study reminders</string>
+    <string name="study_reminder_channel_description">Daily reminders to review vocabulary on time.</string>
+    <string name="study_reminder_title">Time to review</string>
+    <string name="study_reminder_message">You have %1$d words due today. Open the app to review now.</string>
+    <string name="study_reminder_message_with_streak">You have %1$d words due today. Review now to extend your %2$d-day streak.</string>
+    <string name="study_reminder_message_start_streak">You have %1$d words due today. Review now to start your study streak.</string>
 </resources>

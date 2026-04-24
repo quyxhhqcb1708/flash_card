@@ -7,6 +7,8 @@
     <string name="progress_accuracy">Accuracy</string>
     <string name="progress_collections">Topics</string>
     <string name="progress_practiced">Practiced</string>
+    <string name="progress_streak">Study Streak</string>
+    <string name="progress_streak_days">days</string>
     <string name="progress_chart_title">Review Distribution</string>
     <string name="progress_chart_subtitle">A quick visual split between urgent reviews, active learning, scheduled cards, and stable vocabulary.</string>
     <string name="progress_chart_due">Due</string>
@@ -26,9 +28,13 @@
     <string name="progress_collection_mastery">Mastery %1$s</string>
     <string name="progress_collection_accuracy">Accuracy %1$s</string>
     <string name="progress_focus_empty">Save words from Scan Text or Translate to start tracking your learning progress.</string>
+    <string name="progress_focus_streak">Review today to extend your %1$d-day streak.</string>
     <string name="progress_focus_due">You have %1$d words due today. Review them first to stay ahead of the forgetting curve.</string>
     <string name="progress_focus_learning">You are actively building %1$d words. A short session today will make them stick better.</string>
     <string name="progress_focus_mastered">Your library looks stable right now. Keep adding fresh vocabulary to maintain momentum.</string>
     <string name="progress_focus_steady">Your queue is under control. %1$d words are already scheduled for the next sessions.</string>
     <string name="progress_chart_description">Review distribution: %1$d due, %2$d building, %3$d scheduled, %4$d stable.</string>
+    <string name="progress_streak_message_done">Great job. You have kept your %1$d-day streak today.</string>
+    <string name="progress_streak_message_continue">Review today to extend your %1$d-day streak.</string>
+    <string name="progress_streak_message_start">Study today to start your learning streak.</string>
 </resources>

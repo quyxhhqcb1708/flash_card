@@ -26,4 +26,11 @@
     <string name="auth_forgot_password_placeholder">Chức năng quên mật khẩu sẽ được kết nối sau.</string>
     <string name="auth_register_success">Tạo tài khoản thành công.</string>
     <string name="auth_main_placeholder">Đăng nhập thành công. Màn hình này đã sẵn sàng cho luồng chính.</string>
+    <string name="auth_continue_as_guest">Dùng app không cần đăng nhập</string>
+    <string name="auth_guest_mode_hint">Bạn vẫn có thể dùng app offline không cần tài khoản. Khi muốn đồng bộ đám mây, bạn chỉ cần đăng nhập.</string>
+    <string name="auth_guest_name">Chế độ khách</string>
+    <string name="auth_guest_email_placeholder">Chưa đăng nhập</string>
+    <string name="auth_sign_in_to_sync">Đăng nhập để đồng bộ dữ liệu</string>
+    <string name="speech_listen_english">Nghe phát âm tiếng Anh</string>
+    <string name="speech_not_available">Thiết bị này chưa hỗ trợ đọc tiếng Anh.</string>
 </resources>

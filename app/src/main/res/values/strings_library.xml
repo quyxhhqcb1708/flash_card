@@ -21,6 +21,8 @@
     <string name="library_save_title">Save To Flashcard</string>
     <string name="library_create_collection_option">Create New Flashcard</string>
     <string name="library_save_success">Added to %1$s.</string>
+    <string name="library_save_duplicate">This word already exists in %1$s.</string>
+    <string name="library_save_duplicate_badge">Already saved in this topic</string>
     <string name="library_detail_empty">No flashcards in this topic yet.</string>
     <string name="library_delete">Delete</string>
     <string name="library_rename">Rename</string>

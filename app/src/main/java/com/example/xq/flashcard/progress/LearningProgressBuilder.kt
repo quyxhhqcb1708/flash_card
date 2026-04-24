@@ -31,6 +31,8 @@ data class LearningProgressDashboard(
     val practicedCount: Int,
     val masteredCount: Int,
     val dueTodayCount: Int,
+    val studyStreakDays: Int,
+    val studiedToday: Boolean,
     val averageAccuracyRate: Float,
     val totalCollections: Int,
     val distribution: LearningDistribution,
@@ -44,6 +46,7 @@ object LearningProgressBuilder {
         val allCards = collections.flatMap { it.cards }
         val totalPractice = allCards.sumOf { it.practiceCount }
         val totalCorrect = allCards.sumOf { it.correctCount }
+        val streakSummary = StudyStreakCalculator.build(allCards, now)
         val collectionSummaries = collections
             .map { buildCollectionSummary(it, now) }
             .sortedWith(
@@ -58,6 +61,8 @@ object LearningProgressBuilder {
             practicedCount = allCards.count { it.practiceCount > 0 },
             masteredCount = allCards.count(Sm2Scheduler::isMastered),
             dueTodayCount = allCards.count { Sm2Scheduler.isDueToday(it, now) },
+            studyStreakDays = streakSummary.currentStreakDays,
+            studiedToday = streakSummary.studiedToday,
             averageAccuracyRate = if (totalPractice > 0) {
                 totalCorrect.toFloat() / totalPractice.toFloat()
             } else {

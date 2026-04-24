@@ -7,6 +7,8 @@
     <string name="progress_accuracy">Độ chính xác</string>
     <string name="progress_collections">Chủ đề</string>
     <string name="progress_practiced">Đã luyện</string>
+    <string name="progress_streak">Streak ngày học</string>
+    <string name="progress_streak_days">ngày</string>
     <string name="progress_chart_title">Phân bố ôn tập</string>
     <string name="progress_chart_subtitle">Nhìn nhanh số lượng từ cần ôn gấp, đang củng cố, đã lên lịch và đã ổn định.</string>
     <string name="progress_chart_due">Đến hạn</string>
@@ -14,7 +16,7 @@
     <string name="progress_chart_upcoming">Sắp tới</string>
     <string name="progress_chart_stable">Ổn định</string>
     <string name="progress_focus_title">Gợi ý ưu tiên</string>
-    <string name="progress_topics_title">Sức khỏe chủ đề</string>
+    <string name="progress_topics_title">Chủ đề ưu tiên</string>
     <string name="progress_topics_subtitle">Các chủ đề có áp lực ôn tập cao nhất sẽ được đưa lên trước. Chạm vào chủ đề để mở chi tiết thư viện.</string>
     <string name="progress_no_topics">Chưa có chủ đề nào. Hãy lưu từ từ Quét văn bản hoặc Dịch để bắt đầu theo dõi tiến độ.</string>
     <string name="progress_collection_meta">%1$d từ / %2$d đã luyện</string>
@@ -26,9 +28,13 @@
     <string name="progress_collection_mastery">Mức thuộc %1$s</string>
     <string name="progress_collection_accuracy">Độ chính xác %1$s</string>
     <string name="progress_focus_empty">Hãy lưu từ từ Quét văn bản hoặc Dịch để bắt đầu theo dõi tiến độ học tập.</string>
+    <string name="progress_focus_streak">Ôn tập hôm nay để nối dài streak %1$d ngày.</string>
     <string name="progress_focus_due">Bạn có %1$d từ đến hạn hôm nay. Ôn chúng trước để đi đúng nhịp của đường cong quên lãng.</string>
     <string name="progress_focus_learning">Bạn đang củng cố %1$d từ. Một phiên ôn ngắn hôm nay sẽ giúp chúng bám chắc hơn.</string>
-    <string name="progress_focus_mastered">Thư viện của Bạn đang khá ổn định. Hãy thêm từ mới để giữ đà học.</string>
+    <string name="progress_focus_mastered">Thư viện của bạn đang khá ổn định. Hãy thêm từ mới để giữ đà học.</string>
     <string name="progress_focus_steady">Hàng đợi hiện đang ổn. Đã có %1$d từ được lên lịch cho các buổi tiếp theo.</string>
     <string name="progress_chart_description">Phân bố ôn tập: %1$d đến hạn, %2$d đang củng cố, %3$d đã lên lịch, %4$d ổn định.</string>
+    <string name="progress_streak_message_done">Hôm nay bạn đã ôn và giữ được streak %1$d ngày.</string>
+    <string name="progress_streak_message_continue">Ôn tập hôm nay để nối dài streak %1$d ngày.</string>
+    <string name="progress_streak_message_start">Ôn tập hôm nay để bắt đầu streak học tập.</string>
 </resources>

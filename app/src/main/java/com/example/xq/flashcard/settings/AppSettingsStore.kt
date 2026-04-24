@@ -1,6 +1,7 @@
 package com.example.xq.flashcard.ui.settings
 
 import android.content.Context
+import com.example.xq.flashcard.reminder.StudyReminderPermission
 import com.example.xq.flashcard.utils.sharedpreference.SharePreferUtils
 import com.google.firebase.auth.FirebaseAuth
 
@@ -13,7 +14,8 @@ object AppSettingsStore {
 
     fun isNotificationEnabled(context: Context): Boolean {
         SharePreferUtils.init(context)
-        return SharePreferUtils.getBoolean(KEY_NOTIFICATION_ENABLED, true)
+        return SharePreferUtils.getBoolean(KEY_NOTIFICATION_ENABLED, true) &&
+            StudyReminderPermission.hasPermission(context)
     }
 
     fun setNotificationEnabled(context: Context, enabled: Boolean) {

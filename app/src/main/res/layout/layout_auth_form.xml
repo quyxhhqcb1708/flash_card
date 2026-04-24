@@ -312,6 +312,39 @@
             tools:text="Sign up" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tvGuestHint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:textColor="@color/auth_text_secondary"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llSwitchAccount"
+        tools:text="You can use the app locally without an account. Sign in later to sync your data." />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGuestMode"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_library_secondary_button"
+        android:backgroundTint="@null"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:textAllCaps="false"
+        android:textColor="@color/auth_text_primary"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvGuestHint"
+        tools:text="Use without signing in" />
+
     <LinearLayout
         android:id="@+id/dividerContainer"
         android:layout_width="0dp"
@@ -321,7 +354,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llSwitchAccount">
+        app:layout_constraintTop_toBottomOf="@id/btnGuestMode">
 
         <View
             android:layout_width="0dp"

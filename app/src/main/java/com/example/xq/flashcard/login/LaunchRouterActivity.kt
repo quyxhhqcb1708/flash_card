@@ -21,12 +21,16 @@ class LaunchRouterActivity : BaseActivity<ActivityLaunchRouterBinding>() {
 
     private fun routeToDestination() {
         if (FirebaseAuth.getInstance().currentUser != null) {
+            GuestSessionStore.clear(this)
             StudyCloudSyncManager.bootstrapAfterLogin(this) {
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
+        } else if (GuestSessionStore.isGuestMode(this)) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         } else {
-            startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(LoginActivity.createIntent(this))
             finish()
         }
     }

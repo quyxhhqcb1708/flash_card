@@ -7,6 +7,7 @@ data class PracticeQuestion(
     val cardId: Long,
     val collectionName: String,
     val prompt: String,
+    val promptLanguageCode: String,
     val correctAnswer: String,
     val secondaryText: String,
     val languagePair: String,

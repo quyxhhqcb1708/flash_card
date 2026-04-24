@@ -101,6 +101,21 @@ object FlashCardLibraryStore {
         return getCollection(context, collectionId)?.cards?.firstOrNull { it.id == cardId }
     }
 
+    fun hasDuplicateCard(
+        context: Context,
+        collectionId: Long,
+        term: String,
+        definition: String
+    ): Boolean {
+        val normalizedTerm = term.trim()
+        val normalizedDefinition = definition.trim().ifBlank { normalizedTerm }
+        if (normalizedTerm.isBlank()) return false
+
+        return getCollection(context, collectionId)?.cards?.any { card ->
+            isDuplicateCard(card, normalizedTerm, normalizedDefinition)
+        } == true
+    }
+
     fun getAllCards(context: Context): List<RecentFlashCardEntry> {
         return getCollections(context)
             .flatMap { collection ->
@@ -201,38 +216,26 @@ object FlashCardLibraryStore {
         val normalizedTerm = term.trim()
         val normalizedDefinition = definition.trim().ifBlank { normalizedTerm }
         if (normalizedTerm.isBlank()) return null
+        if (hasDuplicateCard(context, collectionId, normalizedTerm, normalizedDefinition)) {
+            return null
+        }
 
         var saveResult: FlashCardSaveResult? = null
         val updatedCollections = getCollections(context).map { collection ->
             if (collection.id != collectionId) return@map collection
 
             val currentTime = System.currentTimeMillis()
-            val existingCard = collection.cards.firstOrNull {
-                it.term.equals(normalizedTerm, ignoreCase = true) &&
-                    it.definition.equals(normalizedDefinition, ignoreCase = true)
-            }
-            val savedCard = if (existingCard != null) {
-                existingCard.copy(
-                    term = normalizedTerm,
-                    definition = normalizedDefinition,
-                    sourceLanguageCode = sourceLanguageCode,
-                    targetLanguageCode = targetLanguageCode,
-                    manualDifficulty = manualDifficulty,
-                    updatedAt = currentTime
-                )
-            } else {
-                FlashCardItem(
-                    id = currentTime,
-                    term = normalizedTerm,
-                    definition = normalizedDefinition,
-                    sourceLanguageCode = sourceLanguageCode,
-                    targetLanguageCode = targetLanguageCode,
-                    manualDifficulty = manualDifficulty,
-                    createdAt = currentTime,
-                    updatedAt = currentTime,
-                    nextReviewAt = 0L
-                )
-            }
+            val savedCard = FlashCardItem(
+                id = currentTime,
+                term = normalizedTerm,
+                definition = normalizedDefinition,
+                sourceLanguageCode = sourceLanguageCode,
+                targetLanguageCode = targetLanguageCode,
+                manualDifficulty = manualDifficulty,
+                createdAt = currentTime,
+                updatedAt = currentTime,
+                nextReviewAt = 0L
+            )
 
             val updatedCards = collection.cards
                 .filterNot { it.id == savedCard.id }
@@ -490,6 +493,15 @@ object FlashCardLibraryStore {
         return value.trim()
             .replace("\\s+".toRegex(), " ")
             .take(MAX_COLLECTION_NAME_LENGTH)
+    }
+
+    private fun isDuplicateCard(
+        card: FlashCardItem,
+        normalizedTerm: String,
+        normalizedDefinition: String
+    ): Boolean {
+        return card.term.equals(normalizedTerm, ignoreCase = true) &&
+            card.definition.equals(normalizedDefinition, ignoreCase = true)
     }
 
     private fun readRawCollections(context: Context): String {

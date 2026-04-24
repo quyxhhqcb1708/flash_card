@@ -1,5 +1,6 @@
 package com.example.xq.flashcard.ui.login
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +13,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 
 class LoginActivity : AuthFormActivity<ActivityLoginBinding>() {
+
+    companion object {
+        private const val EXTRA_FORCE_AUTH = "extra_force_auth"
+
+        fun createIntent(context: Context, forceAuth: Boolean = false): Intent {
+            return Intent(context, LoginActivity::class.java).apply {
+                putExtra(EXTRA_FORCE_AUTH, forceAuth)
+            }
+        }
+    }
+
+    private val forceAuth by lazy { intent.getBooleanExtra(EXTRA_FORCE_AUTH, false) }
 
     private val googleSignInLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -59,7 +72,9 @@ class LoginActivity : AuthFormActivity<ActivityLoginBinding>() {
             primaryButtonClick = { login() },
             switchClick = { gotoRegister() },
             googleClick = { signInWithGoogle() },
-            showGoogle = false
+            showGoogle = false,
+            guestActionClick = { navigateToMainAsGuest() },
+            showGuestAction = true
         )
         cachePrimaryLabel(formBinding)
         formBinding.tvForgotPassword.setOnClickListener {
@@ -68,6 +83,8 @@ class LoginActivity : AuthFormActivity<ActivityLoginBinding>() {
 
         if (authManager.isLoggedIn()) {
             navigateToMain()
+        } else if (!forceAuth && GuestSessionStore.isGuestMode(this)) {
+            navigateToMainAsGuest()
         }
     }
 

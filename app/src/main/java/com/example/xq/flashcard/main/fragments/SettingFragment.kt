@@ -1,14 +1,19 @@
 package com.example.xq.flashcard.ui.main.fragments
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.xq.flashcard.R
 import com.example.xq.flashcard.base.BaseFragment
 import com.example.xq.flashcard.databinding.FragmentSettingBinding
+import com.example.xq.flashcard.reminder.StudyReminderPermission
+import com.example.xq.flashcard.reminder.StudyReminderScheduler
 import com.example.xq.flashcard.ui.library.FlashCardLibraryStore
+import com.example.xq.flashcard.ui.login.GuestSessionStore
 import com.example.xq.flashcard.ui.settings.AppSettingsStore
 import com.example.xq.flashcard.ui.settings.UserProfileActivity
 import com.example.xq.flashcard.sync.CloudSyncEnableMode
@@ -25,6 +30,17 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
 
     private var isBindingSwitchState = false
     private var isCloudActionRunning = false
+    private val requestNotificationPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        val context = context ?: return@registerForActivityResult
+        AppSettingsStore.setNotificationEnabled(context, granted)
+        StudyReminderScheduler.sync(context)
+        bindSettingStates()
+        if (!granted) {
+            showShortToast(R.string.setting_notifications_permission_denied)
+        }
+    }
 
     override fun inflateLayout(
         layoutInflater: LayoutInflater,
@@ -63,8 +79,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
         }
         binding.switchNotifications.setOnCheckedChangeListener { _, isChecked ->
             if (isBindingSwitchState) return@setOnCheckedChangeListener
-            AppSettingsStore.setNotificationEnabled(requireContext(), isChecked)
-            bindSettingStates()
+            handleNotificationToggle(isChecked)
         }
         binding.switchSound.setOnCheckedChangeListener { _, isChecked ->
             if (isBindingSwitchState) return@setOnCheckedChangeListener
@@ -80,10 +95,14 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
     override fun onStart() {
         super.onStart()
         val currentUser = FirebaseAuth.getInstance().currentUser
+        val isGuestMode = currentUser == null && GuestSessionStore.isGuestMode(requireContext())
         binding.tvName.text = currentUser?.displayName?.takeIf { it.isNotBlank() }
             ?: currentUser?.email
+            ?: if (isGuestMode) getString(R.string.auth_guest_name) else null
             ?: getString(R.string.main_user_name_placeholder)
-        binding.tvAccountHint.text = currentUser?.email ?: getString(R.string.setting_account_subtitle)
+        binding.tvAccountHint.text = currentUser?.email
+            ?: if (isGuestMode) getString(R.string.auth_guest_mode_hint) else null
+            ?: getString(R.string.setting_account_subtitle)
         bindSettingStates()
     }
 
@@ -147,6 +166,19 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
         isBindingSwitchState = false
 
         binding.itemStorage.alpha = if (isCloudActionRunning) 0.7f else 1f
+    }
+
+    private fun handleNotificationToggle(isChecked: Boolean) {
+        val context = requireContext()
+        if (isChecked && !StudyReminderPermission.hasPermission(context)) {
+            requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+            bindSettingStates()
+            return
+        }
+
+        AppSettingsStore.setNotificationEnabled(context, isChecked)
+        StudyReminderScheduler.sync(context)
+        bindSettingStates()
     }
 
     private fun handleCloudSyncToggle(isChecked: Boolean) {
