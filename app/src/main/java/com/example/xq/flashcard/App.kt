@@ -1,6 +1,7 @@
 package com.example.xq.flashcard
 
 import android.app.Application
+import com.example.xq.flashcard.ui.library.FlashCardLibraryStore
 import com.example.xq.flashcard.reminder.StudyReminderScheduler
 import com.example.xq.flashcard.utils.locale.AppLanguageManager
 import com.example.xq.flashcard.utils.sharedpreference.SharePreferUtils
@@ -10,6 +11,7 @@ class App : Application() {
         super.onCreate()
         SharePreferUtils.init(this)
         AppLanguageManager.initialize(this)
+        FlashCardLibraryStore.initialize(this)
         StudyReminderScheduler.sync(this)
     }
 }

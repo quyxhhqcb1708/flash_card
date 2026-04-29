@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.services)
 }
@@ -71,6 +72,7 @@ dependencies {
 
     implementation("androidx.room:room-runtime:2.5.1")
     implementation("androidx.room:room-ktx:2.5.1")
+    kapt("androidx.room:room-compiler:2.5.1")
     implementation("androidx.work:work-runtime-ktx:2.8.0-rc01")
 
     implementation("com.github.bumptech.glide:glide:5.0.4")

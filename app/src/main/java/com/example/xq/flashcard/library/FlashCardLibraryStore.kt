@@ -1,12 +1,15 @@
 package com.example.xq.flashcard.ui.library
 
 import android.content.Context
-import com.example.xq.flashcard.ui.practice.Sm2Scheduler
+import com.example.xq.flashcard.library.FlashCardJsonSerializer
 import com.example.xq.flashcard.sync.StudyCloudSyncManager
-import com.example.xq.flashcard.utils.sharedpreference.SharePreferUtils
+import com.example.xq.flashcard.library.storage.FlashCardDatabase
+import com.example.xq.flashcard.library.storage.FlashCardLegacyMigration
+import com.example.xq.flashcard.library.storage.GUEST_OWNER_SCOPE
+import com.example.xq.flashcard.library.storage.toDomain
+import com.example.xq.flashcard.library.storage.toEntity
+import com.example.xq.flashcard.ui.practice.Sm2Scheduler
 import com.google.firebase.auth.FirebaseAuth
-import org.json.JSONArray
-import org.json.JSONObject
 
 data class FlashCardItem(
     val id: Long,
@@ -68,25 +71,16 @@ data class FlashCardLibrarySnapshot(
 
 object FlashCardLibraryStore {
 
-    private const val KEY_FLASHCARD_COLLECTIONS_LEGACY = "flashcard_collections_v1"
-    private const val KEY_FLASHCARD_COLLECTIONS_OWNER_UID = "flashcard_collections_owner_uid"
     private const val MAX_COLLECTION_NAME_LENGTH = 100
 
-    fun getCollections(context: Context): List<FlashCardCollection> {
-        SharePreferUtils.init(context)
-        val rawValue = readRawCollections(context)
-        if (rawValue.isBlank()) return emptyList()
+    fun initialize(context: Context) {
+        database(context)
+    }
 
-        return runCatching {
-            val jsonArray = JSONArray(rawValue)
-            buildList {
-                for (index in 0 until jsonArray.length()) {
-                    val item = jsonArray.optJSONObject(index) ?: continue
-                    add(item.toCollection())
-                }
-            }
-        }.getOrDefault(emptyList())
-            .sortedByDescending { it.updatedAt }
+    fun getCollections(context: Context): List<FlashCardCollection> {
+        return dao(context)
+            .getCollectionsForOwner(resolveOwnerScope())
+            .map { it.toDomain() }
     }
 
     fun hasLocalData(context: Context): Boolean {
@@ -94,11 +88,15 @@ object FlashCardLibraryStore {
     }
 
     fun getCollection(context: Context, collectionId: Long): FlashCardCollection? {
-        return getCollections(context).firstOrNull { it.id == collectionId }
+        return dao(context)
+            .getCollectionForOwner(resolveOwnerScope(), collectionId)
+            ?.toDomain()
     }
 
     fun getCard(context: Context, collectionId: Long, cardId: Long): FlashCardItem? {
-        return getCollection(context, collectionId)?.cards?.firstOrNull { it.id == cardId }
+        return dao(context)
+            .getCardForOwner(resolveOwnerScope(), collectionId, cardId)
+            ?.toDomain()
     }
 
     fun hasDuplicateCard(
@@ -149,6 +147,7 @@ object FlashCardLibraryStore {
     }
 
     fun createCollection(context: Context, name: String): FlashCardCollection {
+        val ownerScope = resolveOwnerScope()
         val normalizedName = normalizeCollectionName(name)
         val existingCollection = getCollections(context).firstOrNull {
             it.name.equals(normalizedName, ignoreCase = true)
@@ -156,6 +155,7 @@ object FlashCardLibraryStore {
         if (existingCollection != null) {
             return existingCollection
         }
+
         val createdAt = System.currentTimeMillis()
         val collection = FlashCardCollection(
             id = createdAt,
@@ -164,14 +164,14 @@ object FlashCardLibraryStore {
             updatedAt = createdAt,
             cards = emptyList()
         )
-        val updatedCollections = getCollections(context)
-            .toMutableList()
-            .apply { add(0, collection) }
-        persist(context, updatedCollections)
+        dao(context).insertCollection(collection.toEntity(ownerScope))
+        notifyLibraryChanged(context)
         return collection
     }
 
     fun renameCollection(context: Context, collectionId: Long, name: String): FlashCardCollection? {
+        val ownerScope = resolveOwnerScope()
+        val currentCollection = getCollection(context, collectionId) ?: return null
         val normalizedName = normalizeCollectionName(name)
         val hasDuplicate = getCollections(context).any {
             it.id != collectionId && it.name.equals(normalizedName, ignoreCase = true)
@@ -179,29 +179,22 @@ object FlashCardLibraryStore {
         if (hasDuplicate) {
             return null
         }
-        var updatedCollection: FlashCardCollection? = null
-        val updatedCollections = getCollections(context).map { collection ->
-            if (collection.id != collectionId) {
-                collection
-            } else {
-                collection.copy(
-                    name = normalizedName,
-                    updatedAt = System.currentTimeMillis()
-                ).also { updatedCollection = it }
-            }
-        }
-        persist(context, updatedCollections)
+
+        val updatedCollection = currentCollection.copy(
+            name = normalizedName,
+            updatedAt = System.currentTimeMillis()
+        )
+        dao(context).updateCollection(updatedCollection.toEntity(ownerScope))
+        notifyLibraryChanged(context)
         return updatedCollection
     }
 
     fun deleteCollection(context: Context, collectionId: Long): Boolean {
-        val currentCollections = getCollections(context)
-        val updatedCollections = currentCollections.filterNot { it.id == collectionId }
-        val changed = updatedCollections.size != currentCollections.size
-        if (changed) {
-            persist(context, updatedCollections)
+        val removed = dao(context).deleteCollection(resolveOwnerScope(), collectionId) > 0
+        if (removed) {
+            notifyLibraryChanged(context)
         }
-        return changed
+        return removed
     }
 
     fun saveCard(
@@ -213,6 +206,7 @@ object FlashCardLibraryStore {
         targetLanguageCode: String,
         manualDifficulty: FlashCardDifficulty = FlashCardDifficulty.MEDIUM
     ): FlashCardSaveResult? {
+        val ownerScope = resolveOwnerScope()
         val normalizedTerm = term.trim()
         val normalizedDefinition = definition.trim().ifBlank { normalizedTerm }
         if (normalizedTerm.isBlank()) return null
@@ -220,44 +214,34 @@ object FlashCardLibraryStore {
             return null
         }
 
-        var saveResult: FlashCardSaveResult? = null
-        val updatedCollections = getCollections(context).map { collection ->
-            if (collection.id != collectionId) return@map collection
+        val collection = getCollection(context, collectionId) ?: return null
+        val currentTime = System.currentTimeMillis()
+        val savedCard = FlashCardItem(
+            id = currentTime,
+            term = normalizedTerm,
+            definition = normalizedDefinition,
+            sourceLanguageCode = sourceLanguageCode,
+            targetLanguageCode = targetLanguageCode,
+            manualDifficulty = manualDifficulty,
+            createdAt = currentTime,
+            updatedAt = currentTime,
+            nextReviewAt = 0L
+        )
+        val updatedCollection = collection.copy(updatedAt = currentTime)
 
-            val currentTime = System.currentTimeMillis()
-            val savedCard = FlashCardItem(
-                id = currentTime,
-                term = normalizedTerm,
-                definition = normalizedDefinition,
-                sourceLanguageCode = sourceLanguageCode,
-                targetLanguageCode = targetLanguageCode,
-                manualDifficulty = manualDifficulty,
-                createdAt = currentTime,
-                updatedAt = currentTime,
-                nextReviewAt = 0L
-            )
-
-            val updatedCards = collection.cards
-                .filterNot { it.id == savedCard.id }
-                .toMutableList()
-                .apply { add(0, savedCard) }
-
-            val updatedCollection = collection.copy(
-                updatedAt = currentTime,
-                cards = updatedCards
-            )
-            saveResult = FlashCardSaveResult(
-                collectionId = updatedCollection.id,
-                collectionName = updatedCollection.name,
-                cardId = savedCard.id
-            )
-            updatedCollection
+        val database = database(context)
+        database.runInTransaction {
+            val roomDao = database.flashCardDao()
+            roomDao.updateCollection(updatedCollection.toEntity(ownerScope))
+            roomDao.insertCard(savedCard.toEntity(collectionId))
         }
+        notifyLibraryChanged(context)
 
-        if (saveResult != null) {
-            persist(context, updatedCollections)
-        }
-        return saveResult
+        return FlashCardSaveResult(
+            collectionId = updatedCollection.id,
+            collectionName = updatedCollection.name,
+            cardId = savedCard.id
+        )
     }
 
     fun updateCard(
@@ -267,53 +251,48 @@ object FlashCardLibraryStore {
         term: String,
         definition: String
     ): FlashCardItem? {
+        val ownerScope = resolveOwnerScope()
+        val existingCard = getCard(context, collectionId, cardId) ?: return null
+        val collection = getCollection(context, collectionId) ?: return null
         val normalizedTerm = term.trim()
         val normalizedDefinition = definition.trim().ifBlank { normalizedTerm }
         if (normalizedTerm.isBlank()) return null
 
-        var updatedCard: FlashCardItem? = null
-        val updatedCollections = getCollections(context).map { collection ->
-            if (collection.id != collectionId) return@map collection
+        val updatedAt = System.currentTimeMillis()
+        val updatedCard = existingCard.copy(
+            term = normalizedTerm,
+            definition = normalizedDefinition,
+            updatedAt = updatedAt
+        )
+        val updatedCollection = collection.copy(updatedAt = updatedAt)
 
-            val cards = collection.cards.map { card ->
-                if (card.id != cardId) {
-                    card
-                } else {
-                    card.copy(
-                        term = normalizedTerm,
-                        definition = normalizedDefinition,
-                        updatedAt = System.currentTimeMillis()
-                    ).also { updatedCard = it }
-                }
-            }
-            collection.copy(
-                updatedAt = System.currentTimeMillis(),
-                cards = cards.sortedByDescending { it.updatedAt }
-            )
+        val database = database(context)
+        database.runInTransaction {
+            val roomDao = database.flashCardDao()
+            roomDao.updateCard(updatedCard.toEntity(collectionId))
+            roomDao.updateCollection(updatedCollection.toEntity(ownerScope))
         }
-        if (updatedCard != null) {
-            persist(context, updatedCollections)
-        }
+        notifyLibraryChanged(context)
         return updatedCard
     }
 
     fun deleteCard(context: Context, collectionId: Long, cardId: Long): Boolean {
+        val ownerScope = resolveOwnerScope()
+        val collection = getCollection(context, collectionId) ?: return false
+        val updatedCollection = collection.copy(updatedAt = System.currentTimeMillis())
         var removed = false
-        val updatedCollections = getCollections(context).map { collection ->
-            if (collection.id != collectionId) return@map collection
 
-            val cards = collection.cards.filterNot {
-                val matched = it.id == cardId
-                removed = removed || matched
-                matched
+        val database = database(context)
+        database.runInTransaction {
+            val roomDao = database.flashCardDao()
+            removed = roomDao.deleteCard(ownerScope, collectionId, cardId) > 0
+            if (removed) {
+                roomDao.updateCollection(updatedCollection.toEntity(ownerScope))
             }
-            collection.copy(
-                updatedAt = System.currentTimeMillis(),
-                cards = cards
-            )
         }
+
         if (removed) {
-            persist(context, updatedCollections)
+            notifyLibraryChanged(context)
         }
         return removed
     }
@@ -324,39 +303,31 @@ object FlashCardLibraryStore {
         cardId: Long,
         quality: Int
     ): FlashCardItem? {
+        val ownerScope = resolveOwnerScope()
+        val card = getCard(context, collectionId, cardId) ?: return null
+        val collection = getCollection(context, collectionId) ?: return null
         val reviewedAt = System.currentTimeMillis()
-        var updatedCard: FlashCardItem? = null
-        val updatedCollections = getCollections(context).map { collection ->
-            if (collection.id != collectionId) return@map collection
+        val reviewResult = Sm2Scheduler.applyReview(card, quality, reviewedAt)
+        val updatedCard = card.copy(
+            practiceCount = card.practiceCount + 1,
+            correctCount = card.correctCount + if (quality >= 3) 1 else 0,
+            lastPracticedAt = reviewedAt,
+            updatedAt = reviewedAt,
+            easinessFactor = reviewResult.easinessFactor,
+            repetitions = reviewResult.repetitions,
+            intervalDays = reviewResult.intervalDays,
+            nextReviewAt = reviewResult.nextReviewAt,
+            lastReviewQuality = quality
+        )
+        val updatedCollection = collection.copy(updatedAt = reviewedAt)
 
-            val updatedCards = collection.cards.map { card ->
-                if (card.id != cardId) {
-                    card
-                } else {
-                    val reviewResult = Sm2Scheduler.applyReview(card, quality, reviewedAt)
-                    card.copy(
-                        practiceCount = card.practiceCount + 1,
-                        correctCount = card.correctCount + if (quality >= 3) 1 else 0,
-                        lastPracticedAt = reviewedAt,
-                        updatedAt = reviewedAt,
-                        easinessFactor = reviewResult.easinessFactor,
-                        repetitions = reviewResult.repetitions,
-                        intervalDays = reviewResult.intervalDays,
-                        nextReviewAt = reviewResult.nextReviewAt,
-                        lastReviewQuality = quality
-                    ).also { updatedCard = it }
-                }
-            }
-
-            collection.copy(
-                updatedAt = reviewedAt,
-                cards = updatedCards.sortedByDescending { it.updatedAt }
-            )
+        val database = database(context)
+        database.runInTransaction {
+            val roomDao = database.flashCardDao()
+            roomDao.updateCard(updatedCard.toEntity(collectionId))
+            roomDao.updateCollection(updatedCollection.toEntity(ownerScope))
         }
-
-        if (updatedCard != null) {
-            persist(context, updatedCollections)
-        }
+        notifyLibraryChanged(context)
         return updatedCard
     }
 
@@ -372,7 +343,7 @@ object FlashCardLibraryStore {
     fun getSnapshot(context: Context): FlashCardLibrarySnapshot {
         val collections = getCollections(context)
         return FlashCardLibrarySnapshot(
-            rawJson = readRawCollections(context).ifBlank { "[]" },
+            rawJson = FlashCardJsonSerializer.toJson(collections).ifBlank { "[]" },
             collectionCount = collections.size,
             cardCount = collections.sumOf { it.cards.size },
             updatedAt = collections.maxOfOrNull { collection ->
@@ -385,7 +356,7 @@ object FlashCardLibraryStore {
     }
 
     fun exportCollectionsJson(context: Context): String {
-        return readRawCollections(context).ifBlank { "[]" }
+        return FlashCardJsonSerializer.toJson(getCollections(context)).ifBlank { "[]" }
     }
 
     fun importCollectionsJson(
@@ -394,99 +365,44 @@ object FlashCardLibraryStore {
         triggerCloudSync: Boolean = false
     ): Boolean {
         return runCatching {
-            val jsonArray = JSONArray(rawJson.ifBlank { "[]" })
-            val collections = buildList {
-                for (index in 0 until jsonArray.length()) {
-                    val item = jsonArray.optJSONObject(index) ?: continue
-                    add(item.toCollection())
+            val ownerScope = resolveOwnerScope()
+            val collections = FlashCardJsonSerializer.fromJson(rawJson)
+            val database = database(context)
+            database.runInTransaction {
+                val roomDao = database.flashCardDao()
+                roomDao.deleteCollectionsForOwner(ownerScope)
+                if (collections.isNotEmpty()) {
+                    roomDao.insertCollections(collections.map { it.toEntity(ownerScope) })
+                    roomDao.insertCards(
+                        collections.flatMap { collection ->
+                            collection.cards.map { card -> card.toEntity(collection.id) }
+                        }
+                    )
                 }
             }
-            persist(context, collections, triggerCloudSync)
+            notifyLibraryChanged(context, triggerCloudSync)
             true
         }.getOrDefault(false)
     }
 
-    private fun persist(
-        context: Context,
-        collections: List<FlashCardCollection>,
-        triggerCloudSync: Boolean = true
-    ) {
-        val jsonArray = JSONArray()
-        collections.forEach { collection ->
-            jsonArray.put(
-                JSONObject()
-                    .put("id", collection.id)
-                    .put("name", collection.name)
-                    .put("createdAt", collection.createdAt)
-                    .put("updatedAt", collection.updatedAt)
-                    .put("cards", JSONArray().apply {
-                        collection.cards.forEach { card ->
-                            put(
-                                JSONObject()
-                                    .put("id", card.id)
-                                    .put("term", card.term)
-                                    .put("definition", card.definition)
-                                    .put("sourceLanguageCode", card.sourceLanguageCode)
-                                    .put("targetLanguageCode", card.targetLanguageCode)
-                                    .put("manualDifficulty", card.manualDifficulty.persistedValue)
-                                    .put("createdAt", card.createdAt)
-                                    .put("updatedAt", card.updatedAt)
-                                    .put("practiceCount", card.practiceCount)
-                                    .put("correctCount", card.correctCount)
-                                    .put("lastPracticedAt", card.lastPracticedAt)
-                                    .put("easinessFactor", card.easinessFactor)
-                                    .put("repetitions", card.repetitions)
-                                    .put("intervalDays", card.intervalDays)
-                                    .put("nextReviewAt", card.nextReviewAt)
-                                    .put("lastReviewQuality", card.lastReviewQuality)
-                            )
-                        }
-                    })
-            )
-        }
-        persistRawCollections(context, jsonArray.toString(), triggerCloudSync)
+    private fun database(context: Context): FlashCardDatabase {
+        val database = FlashCardDatabase.getInstance(context.applicationContext)
+        FlashCardLegacyMigration.migrateIfNeeded(context.applicationContext, database)
+        return database
     }
 
-    private fun JSONObject.toCollection(): FlashCardCollection {
-        val cardsJson = optJSONArray("cards") ?: JSONArray()
-        val cards = buildList {
-            for (index in 0 until cardsJson.length()) {
-                val item = cardsJson.optJSONObject(index) ?: continue
-                add(
-                    FlashCardItem(
-                        id = item.optLong("id"),
-                        term = item.optString("term"),
-                        definition = item.optString("definition"),
-                        sourceLanguageCode = item.optString("sourceLanguageCode"),
-                        targetLanguageCode = item.optString("targetLanguageCode"),
-                        manualDifficulty = FlashCardDifficulty.fromValue(
-                            item.optString("manualDifficulty")
-                        ),
-                        createdAt = item.optLong("createdAt"),
-                        updatedAt = item.optLong("updatedAt"),
-                        practiceCount = item.optInt("practiceCount"),
-                        correctCount = item.optInt("correctCount"),
-                        lastPracticedAt = item.optLong("lastPracticedAt"),
-                        easinessFactor = item.optDouble(
-                            "easinessFactor",
-                            Sm2Scheduler.DEFAULT_EASINESS_FACTOR
-                        ),
-                        repetitions = item.optInt("repetitions"),
-                        intervalDays = item.optInt("intervalDays"),
-                        nextReviewAt = item.optLong("nextReviewAt"),
-                        lastReviewQuality = item.optInt("lastReviewQuality", -1)
-                    )
-                )
-            }
-        }.sortedByDescending { it.updatedAt }
+    private fun dao(context: Context) = database(context).flashCardDao()
 
-        return FlashCardCollection(
-            id = optLong("id"),
-            name = optString("name"),
-            createdAt = optLong("createdAt"),
-            updatedAt = optLong("updatedAt"),
-            cards = cards
-        )
+    private fun notifyLibraryChanged(context: Context, triggerCloudSync: Boolean = true) {
+        if (triggerCloudSync) {
+            StudyCloudSyncManager.syncLocalSnapshotInBackground(context.applicationContext)
+        }
+    }
+
+    private fun resolveOwnerScope(): String {
+        return FirebaseAuth.getInstance().currentUser?.uid
+            ?.takeIf { it.isNotBlank() }
+            ?: GUEST_OWNER_SCOPE
     }
 
     private fun normalizeCollectionName(value: String): String {
@@ -502,53 +418,5 @@ object FlashCardLibraryStore {
     ): Boolean {
         return card.term.equals(normalizedTerm, ignoreCase = true) &&
             card.definition.equals(normalizedDefinition, ignoreCase = true)
-    }
-
-    private fun readRawCollections(context: Context): String {
-        SharePreferUtils.init(context)
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId.isNullOrBlank()) {
-            return SharePreferUtils.getString(KEY_FLASHCARD_COLLECTIONS_LEGACY)
-        }
-
-        val scopedKey = resolveScopedStorageKey(userId)
-        val scopedValue = SharePreferUtils.getString(scopedKey)
-        if (scopedValue.isNotBlank()) {
-            return scopedValue
-        }
-
-        val legacyValue = SharePreferUtils.getString(KEY_FLASHCARD_COLLECTIONS_LEGACY)
-        val legacyOwnerUserId = SharePreferUtils.getString(KEY_FLASHCARD_COLLECTIONS_OWNER_UID)
-        if (legacyValue.isNotBlank() && (legacyOwnerUserId.isBlank() || legacyOwnerUserId == userId)) {
-            SharePreferUtils.saveKey(scopedKey, legacyValue)
-            SharePreferUtils.saveKey(KEY_FLASHCARD_COLLECTIONS_OWNER_UID, userId)
-            SharePreferUtils.removeKey(KEY_FLASHCARD_COLLECTIONS_LEGACY)
-            return legacyValue
-        }
-        return ""
-    }
-
-    private fun persistRawCollections(
-        context: Context,
-        rawJson: String,
-        triggerCloudSync: Boolean
-    ) {
-        SharePreferUtils.init(context)
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId.isNullOrBlank()) {
-            SharePreferUtils.saveKey(KEY_FLASHCARD_COLLECTIONS_LEGACY, rawJson)
-        } else {
-            SharePreferUtils.saveKey(resolveScopedStorageKey(userId), rawJson)
-            SharePreferUtils.saveKey(KEY_FLASHCARD_COLLECTIONS_OWNER_UID, userId)
-            SharePreferUtils.removeKey(KEY_FLASHCARD_COLLECTIONS_LEGACY)
-        }
-
-        if (triggerCloudSync) {
-            StudyCloudSyncManager.syncLocalSnapshotInBackground(context)
-        }
-    }
-
-    private fun resolveScopedStorageKey(userId: String): String {
-        return "${KEY_FLASHCARD_COLLECTIONS_LEGACY}_$userId"
     }
 }

@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1080" viewBox="0 0 1800 1080">
+  <defs>
+    <style>
+      .title { font: 700 30px "Times New Roman", serif; fill: #222; }
+      .entity-title { font: 700 20px "Times New Roman", serif; fill: #222; }
+      .field { font: 16px "Times New Roman", serif; fill: #222; }
+      .label { font: 18px "Times New Roman", serif; fill: #222; }
+      .small { font: 16px "Times New Roman", serif; fill: #222; }
+      .box { fill: #ffffff; stroke: #444; stroke-width: 2; }
+      .header { fill: #d9d9d9; stroke: #444; stroke-width: 2; }
+      .line { stroke: #444; stroke-width: 2.4; fill: none; }
+      .diamond { fill: #ffffff; stroke: #444; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1800" height="1080" fill="#ffffff"/>
+  <text x="900" y="42" text-anchor="middle" class="title">ERD de xuat cho he thong Flashcard va Room Database</text>
+
+  <!-- APP_SETTING -->
+  <g transform="translate(60,440)">
+    <rect class="box" x="0" y="0" width="300" height="240"/>
+    <rect class="header" x="0" y="0" width="300" height="44"/>
+    <line class="line" x1="62" y1="44" x2="62" y2="240"/>
+    <text x="150" y="28" text-anchor="middle" class="entity-title">APP_SETTING</text>
+    <text x="18" y="72" class="field">PK</text>
+    <text x="78" y="72" class="field">user_id (FK)</text>
+    <text x="78" y="100" class="field">language_code</text>
+    <text x="78" y="128" class="field">notification_enabled</text>
+    <text x="78" y="156" class="field">sound_enabled</text>
+    <text x="78" y="184" class="field">cloud_sync_enabled</text>
+    <text x="78" y="212" class="field">cloud_sync_last_sync</text>
+  </g>
+
+  <!-- SYNC_LOG -->
+  <g transform="translate(70,100)">
+    <rect class="box" x="0" y="0" width="300" height="240"/>
+    <rect class="header" x="0" y="0" width="300" height="44"/>
+    <line class="line" x1="62" y1="44" x2="62" y2="240"/>
+    <text x="150" y="28" text-anchor="middle" class="entity-title">SYNC_LOG</text>
+    <text x="18" y="72" class="field">PK</text>
+    <text x="78" y="72" class="field">sync_id</text>
+    <text x="18" y="100" class="field">FK</text>
+    <text x="78" y="100" class="field">user_id</text>
+    <text x="78" y="128" class="field">sync_time</text>
+    <text x="78" y="156" class="field">status</text>
+    <text x="78" y="184" class="field">collection_count</text>
+    <text x="78" y="212" class="field">card_count</text>
+    <text x="78" y="236" class="field">device_id</text>
+  </g>
+
+  <!-- USER -->
+  <g transform="translate(500,330)">
+    <rect class="box" x="0" y="0" width="330" height="290"/>
+    <rect class="header" x="0" y="0" width="330" height="44"/>
+    <line class="line" x1="62" y1="44" x2="62" y2="290"/>
+    <text x="165" y="28" text-anchor="middle" class="entity-title">USER</text>
+    <text x="18" y="72" class="field">PK</text>
+    <text x="78" y="72" class="field">user_id</text>
+    <text x="78" y="100" class="field">firebase_uid</text>
+    <text x="78" y="128" class="field">email</text>
+    <text x="78" y="156" class="field">display_name</text>
+    <text x="78" y="184" class="field">is_guest</text>
+    <text x="78" y="212" class="field">created_at</text>
+    <text x="78" y="240" class="field">last_login_at</text>
+  </g>
+
+  <!-- COLLECTION -->
+  <g transform="translate(1180,70)">
+    <rect class="box" x="0" y="0" width="310" height="220"/>
+    <rect class="header" x="0" y="0" width="310" height="44"/>
+    <line class="line" x1="62" y1="44" x2="62" y2="220"/>
+    <text x="155" y="28" text-anchor="middle" class="entity-title">COLLECTION</text>
+    <text x="18" y="72" class="field">PK</text>
+    <text x="78" y="72" class="field">collection_id</text>
+    <text x="18" y="100" class="field">FK</text>
+    <text x="78" y="100" class="field">user_id</text>
+    <text x="78" y="128" class="field">name</text>
+    <text x="78" y="156" class="field">created_at</text>
+    <text x="78" y="184" class="field">updated_at</text>
+  </g>
+
+  <!-- FLASHCARD -->
+  <g transform="translate(980,390)">
+    <rect class="box" x="0" y="0" width="430" height="350"/>
+    <rect class="header" x="0" y="0" width="430" height="44"/>
+    <line class="line" x1="62" y1="44" x2="62" y2="350"/>
+    <text x="215" y="28" text-anchor="middle" class="entity-title">FLASHCARD</text>
+    <text x="18" y="72" class="field">PK</text>
+    <text x="78" y="72" class="field">flashcard_id</text>
+    <text x="18" y="100" class="field">FK</text>
+    <text x="78" y="100" class="field">collection_id</text>
+    <text x="78" y="128" class="field">term</text>
+    <text x="78" y="156" class="field">definition</text>
+    <text x="78" y="184" class="field">source_language_code</text>
+    <text x="78" y="212" class="field">target_language_code</text>
+    <text x="78" y="240" class="field">manual_difficulty</text>
+    <text x="78" y="268" class="field">created_at</text>
+    <text x="78" y="296" class="field">updated_at</text>
+  </g>
+
+  <!-- SRS_DATA -->
+  <g transform="translate(1500,430)">
+    <rect class="box" x="0" y="0" width="260" height="290"/>
+    <rect class="header" x="0" y="0" width="260" height="44"/>
+    <line class="line" x1="62" y1="44" x2="62" y2="290"/>
+    <text x="130" y="28" text-anchor="middle" class="entity-title">SRS_DATA</text>
+    <text x="18" y="72" class="field">PK</text>
+    <text x="78" y="72" class="field">flashcard_id (FK)</text>
+    <text x="78" y="100" class="field">practice_count</text>
+    <text x="78" y="128" class="field">correct_count</text>
+    <text x="78" y="156" class="field">last_practiced_at</text>
+    <text x="78" y="184" class="field">easiness_factor</text>
+    <text x="78" y="212" class="field">repetitions</text>
+    <text x="78" y="240" class="field">interval_days</text>
+    <text x="78" y="268" class="field">next_review_at</text>
+  </g>
+
+  <!-- REVIEW_HISTORY -->
+  <g transform="translate(980,800)">
+    <rect class="box" x="0" y="0" width="430" height="220"/>
+    <rect class="header" x="0" y="0" width="430" height="44"/>
+    <line class="line" x1="62" y1="44" x2="62" y2="220"/>
+    <text x="215" y="28" text-anchor="middle" class="entity-title">REVIEW_HISTORY</text>
+    <text x="18" y="72" class="field">PK</text>
+    <text x="78" y="72" class="field">review_id</text>
+    <text x="18" y="100" class="field">FK</text>
+    <text x="78" y="100" class="field">flashcard_id</text>
+    <text x="78" y="128" class="field">review_at</text>
+    <text x="78" y="156" class="field">quality</text>
+    <text x="78" y="184" class="field">is_correct</text>
+  </g>
+
+  <!-- Relationship: APP_SETTING - USER -->
+  <line class="line" x1="360" y1="560" x2="385" y2="560"/>
+  <polygon class="diamond" points="420,525 455,560 420,595 385,560"/>
+  <text x="420" y="566" text-anchor="middle" class="label">Co</text>
+  <line class="line" x1="455" y1="560" x2="500" y2="560"/>
+  <text x="348" y="548" class="small">1</text>
+  <text x="485" y="548" class="small">1</text>
+
+  <!-- Relationship: SYNC_LOG - USER -->
+  <line class="line" x1="370" y1="220" x2="435" y2="220"/>
+  <polygon class="diamond" points="470,185 505,220 470,255 435,220"/>
+  <text x="470" y="226" text-anchor="middle" class="label">Co</text>
+  <line class="line" x1="505" y1="220" x2="610" y2="330"/>
+  <text x="356" y="206" class="small">N</text>
+  <text x="530" y="248" class="small">1</text>
+
+  <!-- Relationship: USER - COLLECTION -->
+  <line class="line" x1="830" y1="390" x2="945" y2="225"/>
+  <polygon class="diamond" points="980,190 1015,225 980,260 945,225"/>
+  <text x="980" y="231" text-anchor="middle" class="label">So huu</text>
+  <line class="line" x1="1015" y1="225" x2="1180" y2="180"/>
+  <text x="852" y="376" class="small">1</text>
+  <text x="1158" y="170" class="small">N</text>
+
+  <!-- Relationship: COLLECTION - FLASHCARD -->
+  <line class="line" x1="1335" y1="290" x2="1335" y2="320"/>
+  <polygon class="diamond" points="1300,355 1335,320 1370,355 1335,390"/>
+  <text x="1335" y="362" text-anchor="middle" class="label">Chua</text>
+  <line class="line" x1="1335" y1="390" x2="1335" y2="390"/>
+  <line class="line" x1="1335" y1="390" x2="1335" y2="390"/>
+  <line class="line" x1="1335" y1="390" x2="1335" y2="390"/>
+  <text x="1348" y="312" class="small">1</text>
+  <text x="1348" y="408" class="small">N</text>
+
+  <!-- Relationship: FLASHCARD - SRS_DATA -->
+  <line class="line" x1="1410" y1="560" x2="1410" y2="560"/>
+  <line class="line" x1="1410" y1="560" x2="1455" y2="560"/>
+  <polygon class="diamond" points="1490,525 1525,560 1490,595 1455,560"/>
+  <text x="1490" y="566" text-anchor="middle" class="label">Co</text>
+  <line class="line" x1="1525" y1="560" x2="1500" y2="560"/>
+  <text x="1396" y="548" class="small">1</text>
+  <text x="1532" y="548" class="small">1</text>
+
+  <!-- Relationship: FLASHCARD - REVIEW_HISTORY -->
+  <line class="line" x1="1195" y1="740" x2="1195" y2="765"/>
+  <polygon class="diamond" points="1160,800 1195,765 1230,800 1195,835"/>
+  <text x="1195" y="806" text-anchor="middle" class="label">Co</text>
+  <line class="line" x1="1195" y1="835" x2="1195" y2="800"/>
+  <text x="1208" y="758" class="small">1</text>
+  <text x="1208" y="852" class="small">N</text>
+
+  <!-- Decorative guide text -->
+  <text x="900" y="1060" text-anchor="middle" class="small">
+    So do nay phu hop voi huong chuyen doi tu SharedPreferences + JSON sang Room cho du an hien tai.
+  </text>
+</svg>
